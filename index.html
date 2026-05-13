@@ -693,11 +693,15 @@ async function loadFiche(fileId, fournisseur, marque) {
 async function fetchDriveFile(fileId) {
   const PROXY = 'https://script.google.com/macros/s/AKfycbzfuBUJbIyZj37_1Hwvv3WmVqoSKpp2a8ZJJl1fVZvYyFs8hoLQjPPvvYGFpLlHAl9U/exec';
   const url = `${PROXY}?id=${fileId}`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    redirect: 'follow',
+    mode: 'cors',
+    headers: { 'Accept': 'text/plain, */*' }
+  });
   if (!res.ok) throw new Error(`Proxy: ${res.status} ${res.statusText}`);
   const b64 = await res.text();
-  if (b64.length < 100) throw new Error('Réponse vide — vérifiez le déploiement Apps Script');
-  return b64;
+  if (!b64 || b64.length < 100) throw new Error('Réponse vide du proxy');
+  return b64.trim();
 }
 
 async function extractWithClaude(pdfB64, fournisseur, marque) {
