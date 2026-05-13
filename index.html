@@ -691,22 +691,23 @@ async function loadFiche(fileId, fournisseur, marque) {
 }
 
 async function fetchDriveFile(fileId) {
-  const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-  const proxies = [
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`,
-    `https://thingproxy.freeboard.io/fetch/${directUrl}`,
-    `https://corsproxy.io/?${encodeURIComponent(directUrl)}`,
-  ];
-
-  const toB64 = async (res) => {
-    const buffer = await res.arrayBuffer();
-    if (buffer.byteLength < 500) throw new Error('Réponse trop courte — probablement une page HTML d\'erreur');
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    const chunkSize = 8192;
-    for (let i = 0; i < bytes.byteLength; i += chunkSize) {
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-    }
+  const GOOGLE_API_KEY = 'AIzaSyDnOpqN4lFabCgE5QO9CabOpA233e-tAG8';
+  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${GOOGLE_API_KEY}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Drive API: ${res.status} — ${err.error?.message || res.statusText}`);
+  }
+  const buffer = await res.arrayBuffer();
+  if (buffer.byteLength < 500) throw new Error('Fichier vide ou acces refuse');
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.byteLength; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
     return btoa(binary);
   };
 
