@@ -708,21 +708,6 @@ async function fetchDriveFile(fileId) {
   }
   return btoa(binary);
 }
-    return btoa(binary);
-  };
-
-  let lastError = '';
-  for (const proxyUrl of proxies) {
-    try {
-      const res = await fetch(proxyUrl);
-      if (!res.ok) { lastError = `HTTP ${res.status}`; continue; }
-      return await toB64(res);
-    } catch(e) {
-      lastError = e.message;
-    }
-  }
-  throw new Error(`Tous les proxies ont échoué (${lastError}). Rechargez ou contactez le support.`);
-}
 
 async function extractWithClaude(pdfB64, fournisseur, marque) {
   const systemPrompt = `Tu es un assistant spécialisé en extraction de données SAV pour un revendeur e-commerce.
