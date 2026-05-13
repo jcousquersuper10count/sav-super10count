@@ -691,22 +691,13 @@ async function loadFiche(fileId, fournisseur, marque) {
 }
 
 async function fetchDriveFile(fileId) {
-  const GOOGLE_API_KEY = 'AIzaSyDnOpqN4lFabCgE5QO9CabOpA233e-tAG8';
-  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${GOOGLE_API_KEY}`;
+  const PROXY = 'https://script.google.com/macros/s/AKfycbzfuBUJbIyZj37_1Hwvv3WmVqoSKpp2a8ZJJl1fVZvYyFs8hoLQjPPvvYGFpLlHAl9U/exec';
+  const url = `${PROXY}?id=${fileId}`;
   const res = await fetch(url);
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(`Drive API: ${res.status} — ${err.error?.message || res.statusText}`);
-  }
-  const buffer = await res.arrayBuffer();
-  if (buffer.byteLength < 500) throw new Error('Fichier vide ou acces refuse');
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  const chunkSize = 8192;
-  for (let i = 0; i < bytes.byteLength; i += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-  }
-  return btoa(binary);
+  if (!res.ok) throw new Error(`Proxy: ${res.status} ${res.statusText}`);
+  const b64 = await res.text();
+  if (b64.length < 100) throw new Error('Réponse vide — vérifiez le déploiement Apps Script');
+  return b64;
 }
 
 async function extractWithClaude(pdfB64, fournisseur, marque) {
