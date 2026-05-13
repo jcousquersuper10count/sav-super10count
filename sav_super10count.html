@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAV Super10count</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #2a2a2a;
+    --border2: #333;
+    --text: #e8e8e8;
+    --muted: #888;
+    --accent: #e8c56a;
+    --accent2: #c9a84c;
+    --green: #5cb85c;
+    --red: #e05555;
+    --blue: #5b9cf6;
+    --orange: #f0a04b;
+    --radius: 8px;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .logo span { color: var(--muted); }
+  .header-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #1f1a0a;
+    color: var(--accent2);
+    border: 1px solid #3a2f0a;
+  }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-reload {
+    font-family: var(--sans);
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .btn-reload:hover { background: var(--surface2); color: var(--text); border-color: #444; }
+  .drive-badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .drive-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100vh - 56px);
+  }
+
+  /* ── SIDEBAR ── */
+  aside {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    padding: 0 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .search-wrap {
+    padding: 0 12px 12px;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 7px 10px 7px 30px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--sans);
+    outline: none;
+    transition: border .15s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 9px center;
+  }
+  .search-input:focus { border-color: #444; }
+  .search-input::placeholder { color: var(--muted); }
+
+  .fournisseur-group { margin-bottom: 4px; }
+  .fournisseur-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .1s;
+  }
+  .fournisseur-header:hover { background: var(--surface); }
+  .fournisseur-header.active { background: var(--surface); }
+  .chevron {
+    width: 14px; height: 14px;
+    color: var(--muted);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(90deg); }
+  .fournisseur-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+  }
+  .count-badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .marques-list {
+    display: none;
+    padding-left: 0;
+  }
+  .marques-list.open { display: block; }
+  .marque-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px 6px 38px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    transition: all .1s;
+    border-left: 2px solid transparent;
+  }
+  .marque-item:hover { color: var(--text); background: #161616; }
+  .marque-item.active {
+    color: var(--accent);
+    background: #1a1600;
+    border-left-color: var(--accent);
+  }
+  .marque-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--border2);
+    flex-shrink: 0;
+  }
+  .marque-item.active .marque-dot { background: var(--accent); }
+  .year-tag {
+    margin-left: auto;
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    opacity: .6;
+  }
+
+  /* ── MAIN ── */
+  main {
+    overflow-y: auto;
+    padding: 28px 32px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: var(--muted);
+  }
+  .empty-icon {
+    font-size: 40px;
+    opacity: .3;
+  }
+  .empty-state h2 { font-size: 16px; font-weight: 400; color: var(--muted); }
+  .empty-state p { font-size: 13px; opacity: .6; }
+
+  /* ── LOADING ── */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 16px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .loading-sub {
+    font-size: 11px;
+    color: #555;
+    font-family: var(--mono);
+  }
+
+  /* ── FICHE ── */
+  .fiche-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+  .fiche-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .fiche-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .fiche-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: .04em;
+  }
+  .badge-green { background: #0d2e0d; color: #5cb85c; border: 1px solid #1a4a1a; }
+  .badge-yellow { background: #1f1a0a; color: var(--accent); border: 1px solid #3a2f0a; }
+  .badge-blue { background: #0a1628; color: var(--blue); border: 1px solid #142040; }
+  .badge-red { background: #2a0d0d; color: var(--red); border: 1px solid #451515; }
+  .badge-orange { background: #1e1408; color: var(--orange); border: 1px solid #3a2610; }
+
+  /* ── ALERTS ── */
+  .alerts-bar {
+    background: #1a1200;
+    border: 1px solid #332200;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .alerts-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--accent2);
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .alert-item {
+    font-size: 12px;
+    color: #b89a40;
+    padding: 3px 0;
+    display: flex;
+    gap: 8px;
+  }
+  .alert-item::before { content: '▸'; color: var(--accent2); flex-shrink: 0; }
+
+  /* ── GRID ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .card-title {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-icon { font-size: 12px; }
+
+  .info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 10px;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label {
+    font-size: 10px;
+    color: #555;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .info-value {
+    font-size: 13px;
+    color: var(--text);
+  }
+  .info-value.highlight {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .info-value.email {
+    color: var(--blue);
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+  .info-value.warn { color: var(--orange); }
+  .info-value.danger { color: var(--red); }
+
+  .doc-list { margin-top: 4px; }
+  .doc-item {
+    font-size: 12px;
+    color: #aaa;
+    padding: 2px 0;
+    display: flex;
+    gap: 8px;
+  }
+  .doc-item::before { content: '·'; color: #555; flex-shrink: 0; }
+
+  /* ── CONTACTS ── */
+  .contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .contact-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .contact-role {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .contact-desc {
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .contact-line {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .contact-line a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .contact-line a:hover { text-decoration: underline; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 10px;
+    font-family: var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #444;
+    margin: 20px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── TARIF TABLE ── */
+  .tarif-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+  .tarif-table th {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: .08em;
+    color: #555;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tarif-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .tarif-table tr:last-child td { border-bottom: none; }
+  .tarif-val { color: var(--accent); font-weight: 500; }
+
+  /* ── ERROR ── */
+  .error-box {
+    background: #1e0a0a;
+    border: 1px solid #3a1515;
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 13px;
+    color: #cc6666;
+    font-family: var(--mono);
+  }
+
+  /* ── RAW FALLBACK ── */
+  .raw-content {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+  .raw-content h3 {
+    font-size: 13px;
+    font-family: var(--mono);
+    color: var(--accent);
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .raw-content p { margin-bottom: 6px; color: #bbb; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SUPER10COUNT <span>/</span> SAV</div>
+  <div class="header-tag">Base de connaissances</div>
+  <div class="header-right">
+    <div class="drive-badge">
+      <div class="drive-dot"></div>
+      Drive connecté
+    </div>
+    <button class="btn-reload" onclick="reloadCurrent()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+      Recharger
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar">
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Rechercher un fournisseur..." id="search-input" oninput="filterSidebar(this.value)">
+    </div>
+    <div class="sidebar-label">Fournisseurs</div>
+    <div id="sidebar-list"></div>
+  </aside>
+
+  <main id="main-content">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">📋</div>
+      <h2>Sélectionnez une fiche SAV</h2>
+      <p>Choisissez un fournisseur et une marque dans le menu</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const FOLDER_ID = '14O2oR-eDuC-1-naxqh6C58NEeaWCUFAS';
+
+const DRIVE_FILES = [
+  {id:'1dL-2Kst6vWSw3ciPUK4xRv8AoDzuB2qy', fournisseur:'BSH', marque:'Bosch / Siemens / Neff', annee:'2025'},
+  {id:'17lwcQcligy-h0NREIBwLERVGRIfn6dpz', fournisseur:'Distec / Homedics', marque:'Homedics', annee:'2021'},
+  {id:'1g5O_1khnO72nqMQ1AiuNEf84v6dLZGjv', fournisseur:'Brita', marque:'Brita', annee:'2021'},
+  {id:'1dh7ONksrJa-eiiwTrFvhO_hW2jnrE9Ef', fournisseur:'Cuisidis', marque:'Cuisidis', annee:'2022'},
+  {id:'1bhlfxvcIL-6-4Z36U7WyiVu8G-aN4MYl', fournisseur:'Babyliss', marque:'Babyliss', annee:'2022'},
+  {id:'11SxKDhhg5aJO6--kZf6AzIr5Ml-3UwMo', fournisseur:'Delonghi Group', marque:'Delonghi', annee:'2026'},
+  {id:'1oOVpemzcIoOWSX8pWCQEUQv9ClPaSuD5', fournisseur:'Babyliss', marque:'Cuisinart', annee:'2025'},
+  {id:'1GUSITXf59zindGCaGrzFkFK5ID2qiWoL', fournisseur:'Candy / Hoover / Rosières', marque:'Candy / Hoover / Rosières', annee:'2025'},
+  {id:'1hNzKTQD_FjTRw4GjQgijP4Pltfif5MYb', fournisseur:'Brandt France', marque:'Brandt', annee:'2025'},
+  {id:'1u2bVOBof5Py5FHLc1hc0SiItNNBncX1i', fournisseur:'Eberhardt', marque:'Asko / Falmec', annee:'2025'},
+  {id:'1crzTiwXe1Htr5KQum3ZEdFxdzCiDWxEW', fournisseur:'AV Industry', marque:'AV Industry', annee:'2022'},
+  {id:'1qzKBrXY1d3_o_MsNq0GV6viG_IApGz1l', fournisseur:'Cabasse', marque:'Cabasse', annee:'2025'},
+  {id:'1FSWVL9xeoHE3RmVSLRjVZlUsEQfrODmx', fournisseur:'Beko France', marque:'Beko', annee:'2025'},
+  {id:'1HeAnNPnCO0mwl8HYwwF_SJQ6-EKmtg8e', fournisseur:'Dyson', marque:'Dyson', annee:'2022'},
+  {id:'1DMWg5scfEgbSPzU7Y1OpOUwg9DaQeuRU', fournisseur:'Jura', marque:'Jura', annee:'2026'},
+  {id:'1iS8Sr_VE4FiBtN2FaNymgUebNgOuOhlb', fournisseur:'Candy / Hoover / Rosières', marque:'Hoover Aspirateurs', annee:'2021'},
+  {id:'1Fu7gRFo-Ou4WXFu2x9r9pWnrcx5Zl9Zr', fournisseur:'Forge Adour', marque:'Forge Adour', annee:'2021'},
+  {id:'1trrJ0Oha3R3iZXg9jdhvgUfaKS7IuO9M', fournisseur:'Kim Corp', marque:'Kim Corp', annee:'2022'},
+  {id:'1nd7At_LYYF9FXVJk2iUAnvnl9d-ozINK', fournisseur:'Erard', marque:'Erard', annee:'2022'},
+  {id:'11NsDUkZryK975fYp0hTW7L_I9UhFhNEk', fournisseur:'France Marketing', marque:'France Marketing', annee:'2024'},
+  {id:'172siRybeCuyfvfywP_hvgCLnmLzwGKB4', fournisseur:'Gigaset', marque:'Gigaset', annee:'2025'},
+  {id:'1eGqta97DgMeptEtdouJcR39Mwd54bbDz', fournisseur:'Electrolux', marque:'Electrolux PEM', annee:'2024'},
+  {id:'1ByItTEfQmo1y3gluifIvLNtu_h9Edc0f', fournisseur:'Karcher', marque:'Karcher', annee:'2025'},
+  {id:'1r6GMZjh4Aesb2RLkSp70bVYPBz1YtC5P', fournisseur:'Elica France', marque:'Elica', annee:'2023'},
+  {id:'1md7xYivPYmPx-OzyjVlGlACB9-O1s2xi', fournisseur:'Haier', marque:'Haier Blanc', annee:'2025'},
+  {id:'1jcjd4c5VZmqvkOQtgqQNGeWBO1MJOfGj', fournisseur:'AGA Consumer Products', marque:'AGA', annee:'2023'},
+  {id:'16mAOBpKAins9eQ-evaT-dDeOBvfcoy1T', fournisseur:'Focal JM Lab', marque:'Focal', annee:'2022'},
+  {id:'1czPXOjQmcB6DoN4W4XKCMZLpskf6zeTN', fournisseur:'Electrolux', marque:'Electrolux GEM', annee:'2025'},
+  {id:'1nncErT9DClqQrOk38sWOC2kklC73iCh9', fournisseur:'Harman France', marque:'Harman', annee:'2025'},
+  {id:'1N_HQKVLofy_Zpl-lNGQ6kb03jgAVdoBp', fournisseur:'Glen Dimplex', marque:'Glen Dimplex', annee:'2021'},
+  {id:'1guLgCq0SSAXrraBNw15ThA26y_VKmp_S', fournisseur:'LG Electronics', marque:'LG', annee:'2026'},
+  {id:'1JmBj5-6e3cE8ta_vfLyg7uZXICrpw37j', fournisseur:'Krampouz', marque:'Krampouz', annee:'2025'},
+  {id:'1Z03UCrsFtB6tWipvy9-O7bAQutIE1maq', fournisseur:'Optoma', marque:'Optoma', annee:'2025'},
+  {id:'1zDfA66VhYdNgWC8vIVWtX8Jfqhvmk_ny', fournisseur:'Magarantie', marque:'Magarantie', annee:'2023'},
+  {id:'11FI-6W4dTVDKndq97OZmY0h3oEDtBQa2', fournisseur:'Magimix', marque:'Magimix', annee:'2025'},
+  {id:'1DnAait3akog1H_AbX6x-uOIm9eoNPZS4', fournisseur:'KitchenAid', marque:'KitchenAid', annee:'2024'},
+  {id:'1kc_5F_cbFW9u59TUTczGngnxPrXhAqYg', fournisseur:'OPM France', marque:'SodaStream', annee:'2024'},
+  {id:'1vJ5eC8DiRSRl480IPgXbxcCsxjagVnY9', fournisseur:'Novy', marque:'Novy', annee:'2021'},
+  {id:'1aOESwGnR7dy3u9_zrIYYCWnP15cTd02k', fournisseur:'LG Electronics', marque:'LG TV/AV', annee:'2026'},
+  {id:'1_pQVWRamGUjjbz2UZQbNgYTLIlyF79Ad', fournisseur:'Meliconi', marque:'Meliconi', annee:'2022'},
+  {id:'1Bykkci-S0FHlnMku5XIe5G_682gu6ZcA', fournisseur:'Miele', marque:'Miele', annee:'2025'},
+  {id:'1q6BxLehz3Bbq0ExvbvW4VJR1wh2HigcV', fournisseur:'Nilfisk', marque:'Nilfisk', annee:'2025'},
+  {id:'18LIWul2AWAUA040ve2--jBPZqNL1GjHT', fournisseur:'P&G', marque:'Braun / Oral-B', annee:'2021'},
+  {id:'1eeCfT4ItBjD9nwlqXMhj5DBsJIPgqglb', fournisseur:'Laurastar', marque:'Laurastar', annee:'2026'},
+  {id:'13L-r9BScYUW7ku6ldXNQW6lu0re2HwLm', fournisseur:'Lagrange', marque:'Lagrange', annee:'2025'},
+  {id:'1lsWlnnHOgPjiglQTtcbhWixtKX0RdJS-', fournisseur:'Kitchen Chef', marque:'Kitchen Chef', annee:'2021'},
+  {id:'18BLDcL1-u-b585dF-A8E1exknl8UlNDn', fournisseur:'Samsung', marque:'Samsung', annee:'2025'},
+  {id:'1oRriwSSpFwa33QqcmKOa2GaF7isKe1YP', fournisseur:'Revitive', marque:'Revitive', annee:'2021'},
+  {id:'1BCWOH-F6cfo05X_sQt_jZ3vfFt_CpRnJ', fournisseur:'D&M SAS France', marque:'D&M', annee:'2023'},
+  {id:'1NcP1hwAiLoPCG7nu-SCAJfynRsrWUvB7', fournisseur:'Sony', marque:'Sony', annee:'2025'},
+];
+
+const cache = {};
+let currentFileId = null;
+
+function buildSidebar(filter = '') {
+  const list = document.getElementById('sidebar-list');
+  const grouped = {};
+  DRIVE_FILES.forEach(f => {
+    if (filter && !f.fournisseur.toLowerCase().includes(filter) && !f.marque.toLowerCase().includes(filter)) return;
+    if (!grouped[f.fournisseur]) grouped[f.fournisseur] = [];
+    grouped[f.fournisseur].push(f);
+  });
+
+  const sortedFournisseurs = Object.keys(grouped).sort();
+  list.innerHTML = sortedFournisseurs.map(f => {
+    const items = grouped[f];
+    const isOpen = items.some(i => i.id === currentFileId) || filter;
+    const html = `
+      <div class="fournisseur-group" data-fournisseur="${f}">
+        <div class="fournisseur-header ${isOpen ? 'active' : ''}" onclick="toggleFournisseur('${f}')">
+          <svg class="chevron ${isOpen ? 'open' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="fournisseur-name">${f}</span>
+          <span class="count-badge">${items.length}</span>
+        </div>
+        <div class="marques-list ${isOpen ? 'open' : ''}" id="ml-${f.replace(/[^a-z0-9]/gi,'_')}">
+          ${items.map(i => `
+            <div class="marque-item ${i.id === currentFileId ? 'active' : ''}" onclick="loadFiche('${i.id}', '${i.fournisseur}', '${i.marque}')">
+              <div class="marque-dot"></div>
+              <span>${i.marque}</span>
+              <span class="year-tag">${i.annee}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    return html;
+  }).join('');
+}
+
+function toggleFournisseur(name) {
+  const id = 'ml-' + name.replace(/[^a-z0-9]/gi,'_');
+  const ml = document.getElementById(id);
+  const header = ml.previousElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = ml.classList.contains('open');
+  ml.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('active', !isOpen);
+}
+
+function filterSidebar(val) {
+  buildSidebar(val.toLowerCase());
+}
+
+async function loadFiche(fileId, fournisseur, marque) {
+  currentFileId = fileId;
+  buildSidebar(document.getElementById('search-input').value.toLowerCase());
+  showLoading(fournisseur, marque);
+
+  if (cache[fileId]) {
+    renderFiche(cache[fileId], fournisseur, marque);
+    return;
+  }
+
+  try {
+    const pdfB64 = await fetchDriveFile(fileId);
+    const extracted = await extractWithClaude(pdfB64, fournisseur, marque);
+    cache[fileId] = extracted;
+    renderFiche(extracted, fournisseur, marque);
+  } catch(e) {
+    showError(e.message || 'Erreur lors du chargement');
+  }
+}
+
+async function fetchDriveFile(fileId) {
+  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Drive: ${res.status} ${res.statusText}`);
+  const buffer = await res.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+async function extractWithClaude(pdfB64, fournisseur, marque) {
+  const systemPrompt = `Tu es un assistant spécialisé en extraction de données SAV pour un revendeur e-commerce.
+Analyse la fiche SAV fournie et extrais les informations en JSON UNIQUEMENT, sans markdown ni backticks.
+Structure exacte à respecter :
+{
+  "fournisseur": "nom",
+  "marque": "marque(s)",
+  "periode": "période de validité",
+  "alertes": ["alerte1", "alerte2"],
+  "garantie": {
+    "duree": "...",
+    "territoire": "...",
+    "alerte": "..."
+  },
+  "pms": {
+    "delai": "...",
+    "email": "...",
+    "docs": ["doc1", "doc2"],
+    "issue": ["réponse1", "réponse2"],
+    "alerte": "..."
+  },
+  "psg": {
+    "email": "...",
+    "docs": ["doc1"],
+    "alerte": "..."
+  },
+  "pannes_multiples": {
+    "seuil": "...",
+    "email": "..."
+  },
+  "r21j": {
+    "delai": "...",
+    "email": "...",
+    "alerte": ""
+  },
+  "hors_garantie": {
+    "tarif": "...",
+    "vetuste": "..."
+  },
+  "pieces": {
+    "email": "...",
+    "dispo": "...",
+    "tarif_hg": ""
+  },
+  "contacts": [
+    {"role": "...", "tel": "...", "email": "...", "desc": "..."}
+  ],
+  "tarifs": [
+    {"type": "...", "famille": "...", "montant": "..."}
+  ]
+}
+Si une information n'est pas dans le document, mets une chaîne vide "". Ne fabrique rien.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: [{
+        role: 'user',
+        content: [{
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: pdfB64 }
+        }, {
+          type: 'text',
+          text: `Extrais toutes les infos SAV de cette fiche fournisseur ${fournisseur} / marque ${marque} en JSON strict.`
+        }]
+      }]
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Claude API: ${res.status} — ${err.error?.message || res.statusText}`);
+  }
+
+  const data = await res.json();
+  const text = data.content?.map(c => c.text || '').join('').trim();
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]);
+    throw new Error('Impossible de parser la réponse Claude');
+  }
+}
+
+function showLoading(fournisseur, marque) {
+  document.getElementById('main-content').innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <div class="loading-label">Extraction en cours…</div>
+      <div class="loading-sub">Claude lit la fiche ${fournisseur} / ${marque}</div>
+    </div>
+  `;
+}
+
+function showError(msg) {
+  document.getElementById('main-content').innerHTML = `
+    <div class="error-box">
+      ⚠ Erreur : ${msg}<br><br>
+      <small>Vérifiez que le PDF est accessible publiquement dans Drive (partage "Tout le monde avec le lien").</small>
+    </div>
+  `;
+}
+
+function renderFiche(d, fournisseur, marque) {
+  const getYear = () => {
+    const f = DRIVE_FILES.find(f => f.fournisseur === fournisseur && f.marque === marque);
+    return f?.annee || '';
+  };
+
+  const isRecent = (y) => parseInt(y) >= 2025;
+  const yr = getYear();
+
+  const alertesHTML = d.alertes?.length ? `
+    <div class="alerts-bar">
+      <div class="alerts-title">⚡ Points de vigilance</div>
+      ${d.alertes.map(a => `<div class="alert-item">${a}</div>`).join('')}
+    </div>
+  ` : '';
+
+  const docsHTML = (docs) => docs?.length ? `
+    <div class="doc-list">${docs.map(doc => `<div class="doc-item">${doc}</div>`).join('')}</div>
+  ` : '';
+
+  const contactsHTML = d.contacts?.length ? `
+    <div class="contacts-grid">
+      ${d.contacts.map(c => `
+        <div class="contact-card">
+          <div class="contact-role">${c.role || '—'}</div>
+          <div class="contact-desc">${c.desc || ''}</div>
+          ${c.tel && c.tel !== '—' ? `<div class="contact-line">📞 ${c.tel}</div>` : ''}
+          ${c.email ? `<div class="contact-line">✉ <a href="mailto:${c.email}">${c.email}</a></div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  ` : '<p style="color:#555;font-size:12px;">Aucun contact extrait</p>';
+
+  const tarifsHTML = d.tarifs?.length ? `
+    <table class="tarif-table">
+      <thead><tr><th>Type</th><th>Famille</th><th>Forfait</th></tr></thead>
+      <tbody>
+        ${d.tarifs.map(t => `
+          <tr><td>${t.type||'—'}</td><td>${t.famille||'—'}</td><td class="tarif-val">${t.montant||'—'}</td></tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : '';
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="fiche-header">
+      <div>
+        <div class="fiche-title">${d.fournisseur || fournisseur}</div>
+        <div class="fiche-sub">${d.marque || marque}</div>
+      </div>
+      <div class="fiche-meta">
+        <span class="badge ${isRecent(yr) ? 'badge-green' : 'badge-orange'}">${yr}</span>
+        <span class="badge badge-yellow">${d.periode || ''}</span>
+      </div>
+    </div>
+
+    ${alertesHTML}
+
+    <div class="section-title">Garantie & PMS</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="card-icon">🛡</span> Garantie constructeur</div>
+        <div class="info-row">
+          <span class="info-label">Durée</span>
+          <span class="info-value highlight">${d.garantie?.duree || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Territoire</span>
+          <span class="info-value">${d.garantie?.territoire || '—'}</span>
+        </div>
+        ${d.garantie?.alerte ? `<div class="info-row"><span class="info-value warn">${d.garantie.alerte}</span></div>` : ''}
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="card-icon">⚡</span> PMS — Panne à la mise en service</div>
+        <div class="info-row">
+          <span class="info-label">Délai maximum</span>
+          <span class="info-value highlight">${d.pms?.delai || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Envoyer à</span>
+          <span class="info-value email">${d.pms?.email || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Documents obligatoires</span>
+          ${docsHTML(d.pms?.docs)}
+        </div>
+        ${d.pms?.alerte ? `<div class="info-row"><span class="info-value warn">⚠ ${d.pms.alerte}</span></div>` : ''}
+      </div>
+    </div>
+
+    <div class="section-title">Procédures garantie</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="card-icon">🔧</span> Panne sous garantie</div>
+        <div class="info-row">
+          <span class="info-label">Contact</span>
+          <span class="info-value email">${d.psg?.email || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Documents</span>
+          ${docsHTML(d.psg?.docs)}
+        </div>
+        ${d.psg?.alerte ? `<div class="info-row"><span class="info-value warn">⚠ ${d.psg.alerte}</span></div>` : ''}
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="card-icon">🔁</span> Pannes multiples & Règle 21j</div>
+        <div class="info-row">
+          <span class="info-label">Pannes multiples — seuil</span>
+          <span class="info-value highlight">${d.pannes_multiples?.seuil || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Contact PM</span>
+          <span class="info-value email">${d.pannes_multiples?.email || '—'}</span>
+        </div>
+        ${d.r21j?.delai ? `
+        <div class="info-row" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+          <span class="info-label">Règle 21j — délai</span>
+          <span class="info-value">${d.r21j.delai}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Contact R21j</span>
+          <span class="info-value email">${d.r21j.email || '—'}</span>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+
+    <div class="section-title">Hors garantie & Pièces</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="card-icon">⏰</span> Hors garantie & Vétusté</div>
+        <div class="info-row">
+          <span class="info-label">Tarifs intervention</span>
+          <span class="info-value">${d.hors_garantie?.tarif || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Vétusté</span>
+          <span class="info-value">${d.hors_garantie?.vetuste || '—'}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="card-icon">📦</span> Pièces détachées</div>
+        <div class="info-row">
+          <span class="info-label">Commander à</span>
+          <span class="info-value email">${d.pieces?.email || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Disponibilité légale</span>
+          <span class="info-value highlight">${d.pieces?.dispo || '—'}</span>
+        </div>
+        ${d.pieces?.tarif_hg ? `<div class="info-row"><span class="info-label">Tarif HG</span><span class="info-value">${d.pieces.tarif_hg}</span></div>` : ''}
+      </div>
+    </div>
+
+    ${tarifsHTML ? `
+    <div class="section-title">Forfaits d'intervention</div>
+    <div class="card">${tarifsHTML}</div>
+    ` : ''}
+
+    <div class="section-title">Contacts</div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">📋</span> Fiche contacts</div>
+      ${contactsHTML}
+    </div>
+  `;
+}
+
+function reloadCurrent() {
+  if (!currentFileId) return;
+  delete cache[currentFileId];
+  const f = DRIVE_FILES.find(f => f.id === currentFileId);
+  if (f) loadFiche(f.id, f.fournisseur, f.marque);
+}
+
+buildSidebar();
+</script>
+</body>
+</html>
