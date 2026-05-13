@@ -691,24 +691,36 @@ async function loadFiche(fileId, fournisseur, marque) {
 }
 
 async function fetchDriveFile(fileId) {
-  // Utilise l'URL d'export public Google Drive
   const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`,
+    `https://thingproxy.freeboard.io/fetch/${directUrl}`,
+    `https://corsproxy.io/?${encodeURIComponent(directUrl)}`,
+  ];
 
-  let res = await fetch(proxyUrl);
-  if (!res.ok) throw new Error(`Drive: ${res.status} — vérifiez le partage public du dossier Drive`);
+  const toB64 = async (res) => {
+    const buffer = await res.arrayBuffer();
+    if (buffer.byteLength < 500) throw new Error('Réponse trop courte — probablement une page HTML d\'erreur');
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    const chunkSize = 8192;
+    for (let i = 0; i < bytes.byteLength; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+  };
 
-  const buffer = await res.arrayBuffer();
-  if (buffer.byteLength < 100) throw new Error('Fichier vide ou accès refusé — vérifiez le partage Drive');
-
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  // Traitement par chunks pour éviter les stack overflow sur gros fichiers
-  const chunkSize = 8192;
-  for (let i = 0; i < bytes.byteLength; i += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  let lastError = '';
+  for (const proxyUrl of proxies) {
+    try {
+      const res = await fetch(proxyUrl);
+      if (!res.ok) { lastError = `HTTP ${res.status}`; continue; }
+      return await toB64(res);
+    } catch(e) {
+      lastError = e.message;
+    }
   }
-  return btoa(binary);
+  throw new Error(`Tous les proxies ont échoué (${lastError}). Rechargez ou contactez le support.`);
 }
 
 async function extractWithClaude(pdfB64, fournisseur, marque) {
