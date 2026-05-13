@@ -691,13 +691,23 @@ async function loadFiche(fileId, fournisseur, marque) {
 }
 
 async function fetchDriveFile(fileId) {
-  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Drive: ${res.status} ${res.statusText}`);
+  // Utilise l'URL d'export public Google Drive
+  const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
+
+  let res = await fetch(proxyUrl);
+  if (!res.ok) throw new Error(`Drive: ${res.status} — vérifiez le partage public du dossier Drive`);
+
   const buffer = await res.arrayBuffer();
+  if (buffer.byteLength < 100) throw new Error('Fichier vide ou accès refusé — vérifiez le partage Drive');
+
   const bytes = new Uint8Array(buffer);
   let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+  // Traitement par chunks pour éviter les stack overflow sur gros fichiers
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.byteLength; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
   return btoa(binary);
 }
 
