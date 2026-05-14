@@ -229,7 +229,7 @@ table.tarifs td.tv{color:var(--pink);font-weight:700}
 </main>
 
 <script>
-const PROXY = 'https://script.google.com/macros/s/AKfycbwzmG5vSlPjyGf6d8M8D33ULtXhqERqaA3jPmufsg-6SSWiwNXxsxOOO2JNx3rFO44l/exec';
+const PROXY = 'https://script.google.com/macros/s/AKfycbzLYUA0NCjhXaU8ojc1SVZ9EMxIpIjyw6YLoUwNsgjuHvRJxI17onHEuj6NgurHc6bP/exec';
 let DATA = {}; // {fileId: parsedData}
 let FILES = []; // [{id, name, src}]
 let currentId = null;
@@ -239,12 +239,12 @@ let currentSection = null;
 async function boot() {
   try {
     // Load file list
-    const r = await fetch(PROXY + '?action=list');
+    const r = await fetch(PROXY + '?action=list', {redirect:'follow'});
     FILES = await r.json();
     document.getElementById('h-count').textContent = FILES.length + ' fiches';
 
     // Load cache from Google Sheet
-    const r2 = await fetch(PROXY + '?action=getCache');
+    const r2 = await fetch(PROXY + '?action=getCache', {redirect:'follow'});
     const cache = await r2.json();
     Object.entries(cache).forEach(([id, json]) => {
       try { DATA[id] = JSON.parse(json); } catch(e) {}
@@ -277,7 +277,7 @@ async function initCache() {
   for (const file of toExtract) {
     document.getElementById('progress-current').textContent = file.name.replace('_PROCEDURE_SAV.pdf','').replace('.pdf','');
     try {
-      const r = await fetch(`${PROXY}?action=extract&id=${file.id}&src=${encodeURIComponent(file.src)}`);
+      const r = await fetch(`${PROXY}?action=extract&id=${file.id}&src=${encodeURIComponent(file.src)}`, {redirect:'follow'});
       const d = await r.json();
       if (!d.error) DATA[file.id] = d;
     } catch(e) {}
@@ -327,7 +327,18 @@ function onSrcChange() {
 }
 
 function guessName(filename) {
-  return filename.replace('_PROCEDURE_SAV.pdf','').replace('.pdf','').replace(/_/g,' ');
+  // GPDIS: AIRLUX_PROCEDURE_SAV.pdf -> Airlux
+  // GPDIS: BLACK&DECKER_OUTILLAGE_ASPIRATEURS_PROCEDURE_SAV.pdf -> Black & Decker Outillage Aspirateurs
+  return filename
+    .replace('_PROCEDURE_SAV.pdf','')
+    .replace('_PROCEDURE_SAV','')
+    .replace('.pdf','')
+    .replace(/_/g,' ')
+    .replace(/&/g,' & ')
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ')
+    .trim();
 }
 
 function onFournChange() {
@@ -344,13 +355,19 @@ function onFournChange() {
   const matches = FILES.filter(f => {
     if (f.src !== src) return false;
     const d = DATA[f.id];
-    const name = d ? d.fournisseur : guessName(f.name);
+    let name = '';
+    if (d && d.fournisseur) name = d.fournisseur;
+    else if (src === 'GPDIS') name = guessName(f.name);
+    else name = '(Non extrait) ' + f.name.substring(0,20);
     return name === fourn;
   });
 
   matches.forEach(f => {
     const d = DATA[f.id];
-    const marque = d ? (d.marque || guessName(f.name)) : guessName(f.name);
+    let marque = '';
+    if (d && d.marque) marque = d.marque;
+    else if (src === 'GPDIS') marque = guessName(f.name);
+    else marque = f.name.replace('.pdf','');
     const o = document.createElement('option');
     o.value = f.id;
     o.textContent = marque + (d && d.periode ? ' (' + d.periode + ')' : '');
@@ -392,7 +409,7 @@ async function loadAndShow(id, section) {
 
   const file = FILES.find(f => f.id === id);
   try {
-    const r = await fetch(`${PROXY}?action=extract&id=${id}&src=${encodeURIComponent(file.src)}`);
+    const r = await fetch(`${PROXY}?action=extract&id=${id}&src=${encodeURIComponent(file.src)}`, {redirect:'follow'});
     const d = await r.json();
     if (d.error) throw new Error(d.error);
     DATA[id] = d;
