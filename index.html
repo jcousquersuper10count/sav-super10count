@@ -289,13 +289,13 @@ function buildSidebar(q){
     const isOpen=openGroups[name]||!!q;
     const gid="g_"+name.replace(/[^a-z0-9]/gi,"_");
     return `<div class="fgroup">
-      <div class="fhdr ${isOpen?"open":""}" onclick="toggleG(${JSON.stringify(name)},${JSON.stringify(gid)})">
+      <div class="fhdr ${isOpen?"open":""}" data-name="${name.replace(/"/g,'&quot;')}" data-gid="${gid}" onclick="toggleGEl(this)">
         <span class="chev ${isOpen?"open":""}">▶</span>
         <span class="fname">${name}</span>
         <span class="cbadge">${items.length}</span>
       </div>
       <div class="mlist ${isOpen?"open":""}" id="${gid}">
-        ${items.map(i=>`<div class="mitem ${current&&current.id===i.id?"active":""}" onclick="show(${JSON.stringify(i.id)})">
+        ${items.map(i=>`<div class="mitem ${current&&current.id===i.id?"active":""}" data-id="${i.id}" onclick="showEl(this)">
           <span style="font-size:8px;color:var(--pink)">●</span>
           <span style="flex:1">${i.m}</span>
           <span class="ytag">${i.y}</span>
@@ -308,6 +308,17 @@ function buildSidebar(q){
 function toggleG(name,gid){
   openGroups[name]=!openGroups[name];
   buildSidebar(document.getElementById("search").value);
+}
+
+function toggleGEl(el){
+  const name=el.getAttribute("data-name");
+  const gid=el.getAttribute("data-gid");
+  toggleG(name,gid);
+}
+
+function showEl(el){
+  const id=el.getAttribute("data-id");
+  show(id);
 }
 
 function show(id){
