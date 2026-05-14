@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAV Super10count</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0eff4;
+  --sidebar-bg:#ffffff;
+  --card-bg:#ffffff;
+  --border:#e2e0ea;
+  --border2:#cdc9dc;
+  --t1:#2d2840;
+  --t2:#6b648a;
+  --t3:#9f99bb;
+  --pink:#e9588a;
+  --pink-light:#fde8f0;
+  --pink-border:#f7b8cf;
+  --purple:#7c5cbf;
+  --purple-light:#ede8f9;
+  --purple-border:#c4b3e8;
+  --teal:#2bb5a0;
+  --teal-light:#e0f7f4;
+  --teal-border:#9de0d8;
+  --coral:#f07050;
+  --coral-light:#fef0ec;
+  --coral-border:#f7c4b4;
+  --yellow:#f5c842;
+  --yellow-light:#fdf8e0;
+  --yellow-border:#f0df80;
+  --green:#4db87a;
+  --green-light:#e6f8ee;
+  --green-border:#a0ddb8;
+  --blue:#4a90d9;
+  --blue-light:#e8f2fc;
+  --blue-border:#a8cdf0;
+  --shadow:0 1px 3px rgba(100,80,160,0.08);
+  --shadow2:0 2px 8px rgba(100,80,160,0.12);
+  --r:10px;
+  --r2:14px;
+  --font:'Nunito',sans-serif;
+  --font2:'Nunito Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font2);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#7c5cbf 0%,#e9588a 100%);
+  padding:0 24px;height:58px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(124,92,191,0.25);
+}
+.logo{font-family:var(--font);font-size:15px;color:#fff;letter-spacing:.04em;font-weight:700}
+.logo span{opacity:.6;font-weight:400}
+.htag{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;font-weight:600;letter-spacing:.04em}
+.hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+.dbadge{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:5px;font-family:var(--font);font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:#7effce;box-shadow:0 0 6px #7effce;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:270px 1fr;height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+aside{
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  overflow-y:auto;padding:14px 0;
+  box-shadow:2px 0 8px rgba(100,80,160,0.04);
+}
+.swrap{padding:0 12px 12px}
+input.search{
+  width:100%;
+  background:var(--bg);
+  border:1.5px solid var(--border2);
+  border-radius:20px;
+  padding:7px 14px 7px 34px;
+  color:var(--t1);font-size:13px;
+  font-family:var(--font2);outline:none;
+  transition:border .2s,box-shadow .2s;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239f99bb' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:11px center;
+}
+input.search:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-light)}
+input.search::placeholder{color:var(--t3)}
+.slabel{font-size:10px;font-family:var(--font);letter-spacing:.12em;color:var(--t3);padding:0 14px;margin-bottom:6px;text-transform:uppercase;font-weight:700}
+.fgroup{margin-bottom:2px}
+.fhdr{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 14px;cursor:pointer;
+  border-radius:0;transition:background .15s;
+  user-select:none;
+}
+.fhdr:hover{background:var(--purple-light)}
+.fhdr.open{background:var(--purple-light)}
+.chev{font-size:10px;color:var(--t3);transition:transform .2s;display:inline-block}
+.chev.open{transform:rotate(90deg)}
+.fname{font-size:12px;font-weight:700;color:var(--t1);flex:1;font-family:var(--font)}
+.cbadge{
+  font-size:10px;padding:2px 7px;border-radius:12px;
+  background:var(--purple-light);color:var(--purple);
+  border:1px solid var(--purple-border);font-weight:700;
+}
+.mlist{display:none}
+.mlist.open{display:block}
+.mitem{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 14px 5px 34px;cursor:pointer;
+  font-size:12px;color:var(--t2);
+  border-left:3px solid transparent;
+  transition:all .12s;font-family:var(--font2);
+}
+.mitem:hover{color:var(--pink);background:var(--pink-light)}
+.mitem.active{color:var(--pink);background:var(--pink-light);border-left-color:var(--pink);font-weight:600}
+.ytag{margin-left:auto;font-size:10px;color:var(--t3);font-weight:600}
+.mitem.active .ytag{color:var(--pink)}
+
+/* MAIN */
+main{overflow-y:auto;padding:24px 28px;background:var(--bg)}
+.empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;height:100%;gap:12px;
+}
+.empty-emoji{font-size:48px}
+.empty h2{font-size:16px;color:var(--t2);font-family:var(--font);font-weight:700}
+.empty p{font-size:13px;color:var(--t3)}
+
+/* FICHE */
+.fiche-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.fiche-title{font-size:22px;font-weight:700;color:var(--t1);font-family:var(--font);line-height:1.2}
+.fiche-sub{font-size:13px;color:var(--t2);margin-top:3px}
+.badges{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.badge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;font-family:var(--font)}
+.badge-pink{background:var(--pink-light);color:var(--pink);border:1.5px solid var(--pink-border)}
+.badge-purple{background:var(--purple-light);color:var(--purple);border:1.5px solid var(--purple-border)}
+.badge-teal{background:var(--teal-light);color:var(--teal);border:1.5px solid var(--teal-border)}
+.badge-green{background:var(--green-light);color:var(--green);border:1.5px solid var(--green-border)}
+.badge-yellow{background:var(--yellow-light);color:#b8920a;border:1.5px solid var(--yellow-border)}
+
+/* ALERTES */
+.alert-bar{
+  background:linear-gradient(135deg,#fff8e0,#fff3f0);
+  border:1.5px solid #f7c89a;border-radius:var(--r2);
+  padding:12px 16px;margin-bottom:16px;
+}
+.alert-title{
+  font-size:11px;font-family:var(--font);font-weight:700;
+  color:var(--coral);letter-spacing:.06em;
+  margin-bottom:8px;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
+}
+.alert-item{
+  font-size:13px;color:#b05030;padding:3px 0;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.alert-item::before{content:">";color:var(--coral);flex-shrink:0;font-size:10px;margin-top:3px}
+
+/* SECTIONS */
+.stitle{
+  font-size:11px;font-family:var(--font);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);margin:18px 0 10px;
+  display:flex;align-items:center;gap:8px;
+}
+.stitle::after{content:"";flex:1;height:1.5px;background:linear-gradient(to right,var(--purple-border),transparent)}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+
+/* CARDS */
+.card{
+  background:var(--card-bg);
+  border:1.5px solid var(--border);
+  border-radius:var(--r2);
+  padding:16px;
+  box-shadow:var(--shadow);
+  transition:box-shadow .2s;
+}
+.card:hover{box-shadow:var(--shadow2)}
+.ctitle{
+  font-size:11px;font-family:var(--font);font-weight:700;
+  color:var(--purple);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+}
+.ilabel{
+  font-size:10px;color:var(--t3);font-family:var(--font);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:3px;font-weight:700;
+}
+.ival{font-size:13px;color:var(--t1);margin-bottom:10px;line-height:1.5}
+.ival.hi{color:var(--purple);font-weight:700;font-size:13px}
+.ival.em{font-size:12px;color:var(--blue);font-family:'Courier New',monospace}
+.ival.warn{color:var(--coral);font-size:12px;font-weight:600}
+.doc{
+  font-size:12px;color:var(--t2);padding:3px 0;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.doc::before{content:"→";color:var(--pink);flex-shrink:0;font-weight:700}
+
+/* CONTACTS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.ccard{
+  background:linear-gradient(135deg,var(--purple-light),var(--pink-light));
+  border:1.5px solid var(--purple-border);
+  border-radius:var(--r);padding:12px;
+  transition:box-shadow .2s;
+}
+.ccard:hover{box-shadow:var(--shadow2)}
+.crole{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:2px;font-family:var(--font)}
+.cdesc{font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.4}
+.cline{font-size:11px;color:var(--t2);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.cline a{color:var(--blue);text-decoration:none;font-weight:600}
+.cline a:hover{text-decoration:underline}
+
+/* TABLE */
+table.tarifs{width:100%;border-collapse:collapse;font-size:13px}
+table.tarifs th{
+  text-align:left;font-size:10px;font-family:var(--font);
+  font-weight:700;color:var(--t3);padding:6px 10px;
+  border-bottom:1.5px solid var(--border2);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+table.tarifs td{
+  padding:7px 10px;border-bottom:1px solid var(--border);
+  color:var(--t1);
+}
+table.tarifs tr:last-child td{border-bottom:none}
+table.tarifs td.tv{color:var(--pink);font-weight:700}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--purple-border);border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:var(--purple)}
+
+@media(max-width:700px){
+  .layout{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  aside{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">SUPER10COUNT <span>/</span> SAV</div>
+  <div class="htag">Base de connaissances Base de connaissances</div>
+  <div class="hright">
+    <div class="dbadge"><div class="dot"></div> 16 fournisseurs</div>
+  </div>
+</header>
+<div class="layout">
+  <aside>
+    <div class="swrap">
+      <input class="search" type="text" placeholder="Rechercher un fournisseur..." id="search" oninput="buildSidebar(this.value)">
+    </div>
+    <div class="slabel">Fournisseurs</div>
+    <div id="sidebar"></div>
+  </aside>
+  <main id="main">
+    <div class="empty">
+      <div class="empty-emoji"></div>
+      <h2>Sélectionnez une fiche SAV</h2>
+      <p>Choisissez un fournisseur dans le menu de gauche</p>
+    </div>
+  </main>
+</div>
+<script>
+const DATA=[{id:"bsh",f:"BSH",m:"Bosch / Siemens / Neff",y:"2025",data:{fournisseur:"BSH Electroménager",marque:"Bosch / Siemens / Neff / Gaggenau",periode:"2025",alertes:["PMS : déclaration sous 8 jours date facture client final","Casse occulte : 90 jours calendaires suivant livraison","GCplus : enregistrement sous 1 mois pour garantie pièces+MO+déplacement","Achat plateforme : NOM + N° adhérent obligatoire dans tous les dossiers"],garantie:{duree:"GEM : 2 ans pièces (sans GCplus) | Avec GCplus : 2 ans pièces+MO+déplacement | EXCLUSIV Bosch : 3 ans",territoire:"France Métropolitaine uniquement. DOM-TOM : contacter Michel WADOUX.",alerte:"Sans GCplus : pièces uniquement pour GEM"},pms:{delai:"8 jours à compter de la date de facture client final",email:"Hotline marque / comptoir2.agoraplus.com",docs:["Facture consommateur","Référence appareil + code E-NR plaque signalétique","Motif précis de la panne"],alerte:"Aucun accord systématique de reprise — réparation ou avoir uniquement"},psg:{email:"agoraplus.com (avec N° cpte)",docs:["Référence produit","N° de série (plaque signalétique)","Facture client final","Motif précis de la panne"],alerte:"GEM sans GCplus : transport+MO à la charge du revendeur"},pannes_multiples:{seuil:"3ème panne sous garantie (2 pannes constatées par station agréée)",email:"agoraplus.com — Inspecteur technique valide l'irréparabilité"},r21j:{delai:"21 jours ouvrés",email:"agoraplus.com — demande d'avoir site Revendeur",alerte:""},hors_garantie:{tarif:"99€ TTC déplacement+MO+diagnostic | 129€ TTC si changement de pièces",vetuste:"1% par mois depuis facture consommateur (produit < 5 ans)"},pieces:{email:"agoraplus.com | boutiquebsh@bshg.com | Tél : 0899.705.501",dispo:"GEM : 15 ans (depuis 01/01/2023) | PEM : 10 ans (depuis 01/01/2023)",tarif_hg:"25% sur pièces détachées"},contacts:[{role:"Interlocuteur SAV Revendeurs",tel:"01.49.48.24.56",email:"mouloud.ghilaci@bshg.com",desc:"Contact principal revendeurs"},{role:"Assistance Technique",tel:"0899.705.550",email:"soa.technique@bshg.com",desc:"0,40€/appel"},{role:"Pièces Détachées",tel:"0899.705.501",email:"boutiquebsh@bshg.com",desc:"3€/appel"},{role:"GCplus",tel:"01.49.48.24.10",email:"bsh.gcplus@bshg.com",desc:"Gestion contrats garantie"},{role:"DOM-TOM",tel:"01.49.48.24.56",email:"michel.wadoux@bshg.com",desc:"Inspecteur technique Outre-Mer"}],tarifs:[{type:"Intervention HG/SG",famille:"Sans GCplus",montant:"99€ TTC"},{type:"Avec changement pièce",famille:"Sans GCplus",montant:"129€ TTC"}]}},{id:"eberhardt",f:"Eberhardt",m:"Asko / Falmec",y:"2025",data:{fournisseur:"Eberhardt",marque:"Asko / Falmec",periode:"2025",alertes:["Règle 21j : relance OBLIGATOIRE au 14ème jour ouvré à pdr.eb@eberhardt.fr","Rapport de panne PRÉCIS obligatoire — vague = refusé","Accord retour sous 48h ouvrées → reprise produit sous 8 jours","N° accord de retour à mentionner sur l'emballage","Pièces SG à conserver 1 mois (platines : 3 mois)"],garantie:{duree:"Asko : 2 ans | Asko Intensif : 3 ans | Falmec : 3 ans pièces+MO+déplacement (depuis 01/03/2026)",territoire:"France — Enregistrement GCPLUS ou formulaire portail SAV obligatoire",alerte:"Ventes 01/01/2025-28/02/2026 : Falmec 2 ans seulement"},pms:{delai:"7 jours après achat consommateur ou date livraison",email:"pdr.eb@eberhardt.fr (Document de liaison, case 3 > PMS)",docs:["Document de liaison coché case 3 > PMS","Facture achat consommateur","Photo plaque signalétique","Rapport technique PRÉCIS"],alerte:"Produit nettoyé + complet + accessoires + carton origine si possible"},psg:{email:"conso.eb@eberhardt.fr (sans SAV intégré) | AGORA (avec SAV intégré)",docs:["Référence + N° série","Motif panne précis","Coordonnées consommateur (fixe + mobile)","Facture achat consommateur"],alerte:"Constater la panne AVANT échange consommateur. Diagnostic vague refusé."},pannes_multiples:{seuil:"Dès la 3ème intervention avérée — constituer dossier 2 premières interventions",email:"pdr.eb@eberhardt.fr (case 4 > PM)"},r21j:{delai:"21ème jour SG / 30ème jour HG (date de commande)",email:"pdr.eb@eberhardt.fr (case 5 > R21j)",alerte:"Relance OBLIGATOIRE au 14ème jour + joindre justificatif"},hors_garantie:{tarif:"Asko posable : 90€ | Asko encastrable : 100€ | Falmec plafonnier : 150€ | Falmec autre : 100€ (+0,60€/km > 30km)",vetuste:"1%/mois à partir du 13ème mois — an 2 : 13-24% | an 3 : 25-36% | an 4 : 37-48% | an 5 : 49-60%"},pieces:{email:"pdr.eb@eberhardt.fr | sav.eberhardt.fr (HG) | AGORA (SG) | Tél : 03.88.65.73.90",dispo:"Avant 01/08/2021 : 10 ans | Après 01/08/2021 : 15 ans",tarif_hg:"SAV intégré : 30%+15% | Sans SAV : 25%+15%"},contacts:[{role:"Pièces Détachées",tel:"03.88.65.73.90",email:"pdr.eb@eberhardt.fr",desc:"Commandes pièces + accords retour"},{role:"Service Consommateurs",tel:"",email:"conso.eb@eberhardt.fr",desc:"PSG sans SAV intégré"},{role:"Assistance Technique",tel:"03.88.65.73.91",email:"tech.eb@eberhardt.fr",desc:"Support technique + formation"},{role:"Litiges Transport",tel:"03.88.65.71.90",email:"carole.schneider@eberhardt.fr",desc:"Suivi logistique"},{role:"Comptabilité",tel:"",email:"valerie.heraief@eberhardt.fr",desc:"Comptabilité"}],tarifs:[{type:"Mécanique",famille:"Asko Posable",montant:"90€"},{type:"Mécanique",famille:"Asko Encastrable",montant:"100€"},{type:"Circuit froid",famille:"Asko Posable Froid",montant:"135€"},{type:"Circuit froid",famille:"Asko Encastrable Froid",montant:"150€"},{type:"Mécanique",famille:"Falmec Plafonnier",montant:"150€"},{type:"Mécanique",famille:"Falmec Autre",montant:"100€"}]}},{id:"candy",f:"Candy / Hoover / Rosières",m:"Candy / Rosières / Hoover GEM",y:"2025",data:{fournisseur:"Groupe Candy Hoover (Rosières)",marque:"Candy / Rosières / Hoover / Haier GEM",periode:"2025",alertes:["Casse occulte : formulaire sous 7 jours ouvrés du déballage (max 3 mois)","GCplus cuisinistes : enregistrement obligatoire 30 jours pour garantie 2 ans","Achat plateforme : NOM + N° adhérent obligatoire"],garantie:{duree:"Candy/Rosières/Hoover GEM : 1 an pièces | Haier GEM : 2 ans pièces+MO+déplacement | Hoover PEM : 2 ans pièces+MO",territoire:"France Métro + Corse + Guadeloupe + Martinique + Réunion + Guyane",alerte:"GC+ 18,50€ si compte indirect → garantie 2 ans pièces+MO+déplacement"},pms:{delai:"8 jours à compter de la date de facture client final",email:"solcom@rosieres.fr | PEM : ANRH SERVICE 4 Rue Thomas Edison 60180 NOGENT SUR OISE",docs:["Référence produit (photo plaque signalétique)","Adresse enlèvement (magasin uniquement)","Nom + tél + email contact","Facture client final + facture fournisseur","Rapport technique complet"],alerte:"GEM : appeler Hotline 0.892.350.074 pour validation panne"},psg:{email:"solcom@rosieres.fr | agoraplus.com",docs:["Référence produit","N° de série (plaque signalétique)","Facture client final","Motif précis de la panne"],alerte:"Sans GCplus : transport+MO à la charge du revendeur"},pannes_multiples:{seuil:"3ème panne sous garantie",email:"solcom@rosieres.fr"},r21j:{delai:"21 jours",email:"solcom@rosieres.fr",alerte:"Joindre : date+référence commande Agora + coordonnées centre réparation"},hors_garantie:{tarif:"Station technique agréée — frais à la charge du consommateur",vetuste:"1% par mois depuis date achat (produit < 5 ans)"},pieces:{email:"agoraplus.com | pbpiece@rosieres.fr | Tél : 0892.35.00.74",dispo:"GEM Froid/Cuisson : 11 ans | GEM Lavage : 14 ans | PEM : 13 ans",tarif_hg:"20% pièces fonctionnelles | 40% consommables"},contacts:[{role:"Directeur SAV",tel:"01.73.79.48.11",email:"marc.peliconi@haier-europe.com",desc:"Direction SAV Groupe"},{role:"Interlocuteur SAV Revendeurs",tel:"06.20.72.23.35",email:"steeve.coppet@haier-europe.com",desc:"Contact technique"},{role:"Hotline SAV Revendeurs",tel:"0892.35.00.74",email:"solcom@rosieres.fr",desc:"Solutions commerciales + retours"},{role:"Problème Technique",tel:"",email:"pbtech@rosieres.fr",desc:"Questions techniques"},{role:"Problème Pièce",tel:"",email:"pbpiece@rosieres.fr",desc:"Pièces détachées"},{role:"Casse Occulte",tel:"",email:"litige.livraison@haier-europe.com",desc:"Avaries transport"}],tarifs:[]}},{id:"lg_tv",f:"LG Electronics",m:"LG TV / Audio / Vidéo",y:"2026",data:{fournisseur:"LG Electronics France",marque:"LG TV / Audio / Vidéo",periode:"2026",alertes:["PMS : saisie sur GSFS gsfsplus-eu.lge.com dans les 14 jours calendaires","Casse occulte : 90 jours calendaires suivant facturation LG","TV 43 pouces et plus : N° RMA obligatoire avant toute intervention — 0.800.99.55.55","Achat GDD : indiquer N° compte constructeur plateforme dans les dossiers"],garantie:{duree:"TV/Moniteurs 43p+ : 2 ans pièces+MO+déplacement | TV moins de 43p : 2 ans pièces+MO retour atelier | Audio/Vidéo : 2 ans pièces+MO atelier NSE | Accessoires : 6 mois",territoire:"France Métropolitaine. DOM-TOM : avoir sur certificat destruction huissier",alerte:"Vétusté 1%/mois si avoir émis HG (produit < 5 ans)"},pms:{delai:"14 jours calendaires entre date achat et demande en ligne GSFS",email:"gsfsplus-eu.lge.com | fatiha.mesroua@lge.com",docs:["Copie facture achat consommateur","Photo plaque signalétique","Photo de la panne (vue d'ensemble TV)"],alerte:"Avaries/Casses occultes gérées par département Logistique, pas le SAV"},psg:{email:"gsfsplus-eu.lge.com | Hotline : 0.800.99.55.55",docs:["Référence produit","Photo plaque signalétique","Facture client final","Motif précis de la panne","TV : photo dalle allumée et éteinte"],alerte:"TV moins de 43p : retour atelier NSE. Transport aller à charge magasin, retour à charge LG."},pannes_multiples:{seuil:"3ème panne sous garantie",email:"gsfsplus-eu.lge.com"},r21j:{delai:"21 jours calendaires",email:"gsfsplus-eu.lge.com",alerte:""},hors_garantie:{tarif:"TV 43p+ : intervention domicile payant | Autres : station agréée NSE — frais aller+retour client",vetuste:"1% par mois depuis date achat (produit < 5 ans)"},pieces:{email:"lgpiece@lgefs.zendesk.com | SDS : 08.25.72.69.69 | ASWO : 08.20.34.26.26",dispo:"2 ans à compter de la date d'achat consommateur",tarif_hg:""},contacts:[{role:"Coordinateur SAV Revendeurs",tel:"",email:"laurent.tridat@lge.com",desc:"Contact réseau SAV"},{role:"Gestion litiges / Procédures",tel:"01.49.89.88.93 / 06.74.95.58.30",email:"fatiha.mesroua@lge.com",desc:"Suivi dossiers + procédures SAV"},{role:"Accord de Retour",tel:"0825.009.111 (choix 1)",email:"gsfsplus-eu.lge.com",desc:"Portail GSFS"},{role:"Hotline Interventions",tel:"0800.99.55.55",email:"serviceconso@lge.com",desc:"Gratuit — lun-ven 9h-19h"},{role:"Casse Occulte Brun",tel:"",email:"corinne.bonnet@lge.com",desc:"Avaries occultes TV"}],tarifs:[]}},{id:"lg_gem",f:"LG Electronics",m:"LG GEM / Aspirateurs",y:"2026",data:{fournisseur:"LG Electronics France",marque:"LG GEM / Aspirateurs / Micro-ondes",periode:"2026",alertes:["GEM : intervention à domicile — appeler 0800.99.55.55 pour créer le dossier","Aspirateurs et micro-ondes : N° RMA obligatoire avant envoi à NSE via sav.nse-services.fr","Casse occulte : 90 jours calendaires suivant facturation LG"],garantie:{duree:"GEM : 2 ans pièces+MO intervention à domicile | Aspirateurs+MO : 2 ans pièces+MO retour atelier NSE | LL moteur Dual Inverter (>2017) : 10 ans | Réfrigérateur compresseur Inverter (>2017) : 10 ans",territoire:"France Métropolitaine. DOM-TOM : avoir sur certificat destruction huissier",alerte:"Moteur Dual Inverter LL et compresseur Inverter réfrigérateur : garantie 10 ans"},pms:{delai:"14 jours calendaires",email:"gsfsplus-eu.lge.com | fatiha.mesroua@lge.com | Hotline GEM : 0800.99.55.55",docs:["Facture achat consommateur","Photo plaque signalétique","Descriptif et photo de la panne"],alerte:"Avaries/Casses occultes : département Logistique, pas le SAV"},psg:{email:"GEM : Hotline 0800.99.55.55 | Aspirateurs+MO : sav.nse-services.fr (N° RMA obligatoire)",docs:["Référence produit","N° de série","Facture consommateur final","Motif précis de la panne"],alerte:"GEM : intervention à domicile. Aspirateurs/MO : transport aller à charge expéditeur, retour à charge LG."},pannes_multiples:{seuil:"3ème panne sous garantie",email:"gsfsplus-eu.lge.com"},r21j:{delai:"21 jours calendaires",email:"gsfsplus-eu.lge.com",alerte:""},hors_garantie:{tarif:"GEM : intervention domicile payant | Aspirateurs/MO : station NSE — N° RMA avant envoi",vetuste:"1% par mois depuis date achat (produit < 5 ans)"},pieces:{email:"lgpiece@lgefs.zendesk.com | SDS : 08.25.72.69.69 | ASWO : 08.20.34.26.26",dispo:"GEM Lavage : 15 ans | GEM Lave-vaisselle : 14 ans | Autres GEM : 10 ans",tarif_hg:""},contacts:[{role:"Coordinateur SAV",tel:"",email:"laurent.tridat@lge.com",desc:"Contact réseau SAV"},{role:"Interlocuteur Blanc/GEM",tel:"06.58.30.28.49",email:"nicolas.bertrand@lge.com",desc:"Renseignements techniques GEM"},{role:"Gestion litiges",tel:"01.49.89.88.93",email:"fatiha.mesroua@lge.com",desc:"Suivi dossiers"},{role:"Hotline Interventions",tel:"0800.99.55.55",email:"serviceconso@lge.com",desc:"Gratuit lun-ven 9h-19h"},{role:"NSE Atelier",tel:"04.70.58.43.90",email:"support.web@nse-groupe.com",desc:"Aspirateurs/MO — création compte"},{role:"Casse Occulte Blanc",tel:"",email:"corinne.bonnet@lge.com",desc:"Avaries occultes GEM"}],tarifs:[]}},{id:"haier",f:"Haier",m:"Haier Blanc",y:"2023",data:{fournisseur:"Haier France",marque:"Haier Blanc GEM",periode:"2023",alertes:["PMS : déclaration sous 15 jours date facture client final","Casse occulte : 7 jours ouvrés à partir de livraison","Micro-ondes moins de 50 euros : destruction avec retour plaque signalétique","Extension garantie compresseur/moteur : enregistrement haier-europe.com sous 30 jours"],garantie:{duree:"GEM : 2 ans pièces+MO+intervention sur site avec GCplus",territoire:"France Métro + Corse + Guadeloupe + Martinique + Réunion + Guyane",alerte:"Enregistrement GCplus obligatoire sous 30 jours suivant vente"},pms:{delai:"15 jours à compter de la date de facture client final",email:"solcom@rosieres.fr | SOLSAV sur Agora",docs:["Référence produit (photo plaque signalétique)","Adresse enlèvement (magasin uniquement)","Nom + tél + email contact","Facture client final","Motif précis de la panne"],alerte:""},psg:{email:"Hotline GEM : 0.980.406.409 | solcom@rosieres.fr",docs:["Référence produit (photo plaque signalétique)","Adresse enlèvement (magasin)","Facture client final + facture fournisseur","Rapport technique complet"],alerte:"GEM : station mandatée par Haier après validation panne par hotline"},pannes_multiples:{seuil:"3ème panne sous garantie",email:"solcom@rosieres.fr"},r21j:{delai:"21 jours depuis déclaration panne, réception station ou commande pièce",email:"solcom@rosieres.fr",alerte:"Joindre : coordonnées centre + date commande Agora + N° dossier"},hors_garantie:{tarif:"Station technique agréée — frais à la charge du consommateur",vetuste:"1% par mois depuis date achat (produit < 5 ans)"},pieces:{email:"agoraplus.com | haierspares.eu (sans compte) | solcom@rosieres.fr",dispo:"GEM Froid/Cuisson : 11 ans | GEM Lavage : 14 ans | PEM : 13 ans",tarif_hg:""},contacts:[{role:"Directeur SAV",tel:"01.73.79.48.11",email:"marc.peliconi@haier-europe.com",desc:"Direction SAV"},{role:"Directeur Technique GEM",tel:"06.20.72.23.35",email:"steeve.coppet@haier-europe.com",desc:"Support technique GEM"},{role:"Hotline SAV Revendeurs",tel:"0.980.406.409",email:"solcom@rosieres.fr",desc:"Solutions commerciales + retours"},{role:"Hotline Technique",tel:"0892.494.159",email:"",desc:"Support technique revendeurs"},{role:"Casse Occulte",tel:"",email:"litige.livraison@haier-europe.com",desc:"Avaries transport"}],tarifs:[]}},{id:"miele",f:"Miele",m:"Miele",y:"2025",data:{fournisseur:"Miele SAS",marque:"Miele GEM / PEM / Aspirateurs",periode:"2025",alertes:["PMS : étudié au cas par cas par Responsable Technique Régional (RTR) — appeler avant","R21j : relancer pièces par mail 7 jours après commande à pieces@miele-support.fr","Pannes multiples : 4ème panne requise (3 interventions réalisées)","Lave-linge gamme domestique acheté après oct. 2025 : garantie moteur 25 ans","Casse occulte : 15 jours calendaires suivant livraison constructeur"],garantie:{duree:"GEM : 2 ans pièces (sans contrat) | Convention SAV + GCplus gratuit : 2 ans pièces+MO+déplacement | GCplus payant : 25€ HT/produit GEM",territoire:"France Métropolitaine + DROM + COM + Polynésie + Nouvelle Calédonie",alerte:"Garantie MO+déplacement conditionnée à convention SAV signée avec Responsable Régional"},pms:{delai:"10 jours maximum à compter de la date de facturation consommateur",email:"contact@miele-support.fr | Hotline : 09.74.50.10.00",docs:["Référence produit","N° de série = N° Fabrication","Facture du consommateur","Motif précis de la panne"],alerte:"Dossier étudié cas par cas par RTR régional. Privilégier remise en état."},psg:{email:"09.74.50.10.00 | contact@miele-support.fr | agoraplus.com",docs:["Référence produit","N° de série (plaque signalétique)","Facture client final","Motif précis de la panne"],alerte:"Pièces SG facturées puis remboursées sur dossier via Agora (Interventions SG)"},pannes_multiples:{seuil:"4ème panne sous garantie (3 interventions réalisées)",email:"support.technique@miele.fr — attention RTR régional concerné"},r21j:{delai:"21 jours (relance obligatoire à 7 jours à pieces@miele-support.fr)",email:"pieces@miele-support.fr | Agora",alerte:"Avoir sans vétusté si pièce non livrée après 21 jours"},hors_garantie:{tarif:"Commander pièces via agoraplus.com | SAV Miele 09.74.50.10.00 (prestation payante)",vetuste:"Reprise avec vétusté si produit irréparable — accord SAV Miele requis"},pieces:{email:"pieces@miele-support.fr | agoraplus.com | Tél : 01.49.39.34.44",dispo:"GEM et PEM : 15 ans | Aspirateurs : 10 ans",tarif_hg:""},contacts:[{role:"Directeur des Services",tel:"06.72.95.34.31",email:"olivier.bauduin@miele.com",desc:"Direction services"},{role:"Directeur Technique et Qualité",tel:"06.89.71.43.04",email:"jean-philippe.charron@miele.com",desc:"Support technique"},{role:"Hotline Consommateurs",tel:"09.74.50.10.00",email:"contact@miele-support.fr",desc:"Non surtaxé"},{role:"Hotline Technique Revendeurs",tel:"01.49.39.44.88",email:"support.technique@miele.fr",desc:"Support technique revendeurs"},{role:"Pièces Détachées",tel:"01.49.39.34.44",email:"pieces@miele-support.fr",desc:"Commandes pièces"}],tarifs:[]}},{id:"samsung",f:"Samsung",m:"Samsung",y:"2025",data:{fournisseur:"Samsung Electronics France",marque:"Samsung TV / Audio / GEM / Mobile",periode:"2025",alertes:["PMS : saisie sur portail E-PE partnerseu.sec.samsung.com sous 15 jours","Casse occulte : 90 jours à casse.occulte@samsung.com","Refus intervention si magasin refuse tests/photos/prise en main à distance","AGEC : extension +6 mois garantie si réparation avec changement de pièces","Achat plateforme : NOM + N° adhérent obligatoire"],garantie:{duree:"TV 40p+ : 2 ans sur site | TV moins de 40p : 2 ans retour atelier | Ecrans LCD : 3 ans | Téléphones : 2 ans retour atelier | SSD : 3 à 5 ans selon gamme | Cartes mémoire : 10 ans",territoire:"France Métropolitaine. DOM-TOM : station agréée locale obligatoire.",alerte:"+6 mois garantie légale si réparation avec changement de pièces fonctionnelles (loi AGEC)"},pms:{delai:"15 jours après achat consommateur (maxi 12 mois après fabrication)",email:"partnerseu.sec.samsung.com | assistance.service@samsung.com",docs:["Référence produit","N° de série plaque signalétique (avec lettre à la fin — PAS celui du carton)","Photo plaque signalétique","Facture vente consommateur","Motif précis","TV : photo dalle allumée et éteinte"],alerte:"A réception RMA : compléter trame d'enlèvement et envoyer à enlevements@samsung.com"},psg:{email:"Consommateur : 01.48.63.00.00 | Revendeur : 0825.08.10.34 | assistance.service@samsung.com",docs:["Référence + N° de série","Facture client final","Motif précis de la panne"],alerte:"Revendeur avec produit en magasin : appel en numéro masqué (#31#)"},pannes_multiples:{seuil:"3ème panne sous garantie (2 pannes avérées par station)",email:"assistance.service@samsung.com + trame d'enlèvement"},r21j:{delai:"30 jours (impossibilité technique de remise en conformité)",email:"assistance.service@samsung.com",alerte:""},hors_garantie:{tarif:"Station technique agréée — frais aller+retour et réparation à la charge du client",vetuste:"Applicable si avoir émis (produit < 7 ans)"},pieces:{email:"ASWO : boutique.aswo.com (01.30.27.00.00) | Clients finaux : mespiecesdetachees.com",dispo:"TV/Téléphones/Tablettes : 7 ans | Audio-vidéo/Ecrans LCD : 4 ans",tarif_hg:""},contacts:[{role:"Service Opération Officer",tel:"06.65.64.50.22",email:"m.camus@samsung.com",desc:"Contact principal revendeurs"},{role:"Hotline Revendeurs",tel:"0825.08.10.34",email:"assistance.service@samsung.com",desc:"Assistance technique + solutions"},{role:"Hotline Cuisinistes",tel:"01.77.86.23.86",email:"services.cuisinistes@samsung.com",desc:"Revendeurs et consommateurs cuisinistes"},{role:"Hotline Consommateurs",tel:"01.48.63.00.00",email:"",desc:"Lun-sam 9h-20h"},{role:"Casse Occulte",tel:"",email:"casse.occulte@samsung.com",desc:"90 jours"},{role:"Enlèvements",tel:"",email:"enlevements@samsung.com",desc:"Trames après accord RMA"}],tarifs:[]}},{id:"brandt",f:"Brandt France",m:"Brandt / De Dietrich / Vedette / Sauter",y:"2025",data:{fournisseur:"Brandt France",marque:"Brandt / De Dietrich / Vedette / Sauter",periode:"2025",alertes:["RAPPEL PRODUIT : Cuiseur à riz SUP515 — risque choc électrique/brûlure. Bloquer stocks et détruire.","PMS : déclaration sous 3 jours date facture consommateur","Casse occulte : 48 heures à compter de la date de livraison constructeur","GCplus obligatoire pour garantie 2 ans pièces+MO+déplacement","Sans GCplus : 1 an pièces uniquement"],garantie:{duree:"Avec GCplus : 2 ans pièces+MO+déplacement (Brandt, Sauter, De Dietrich, Vedette) | Sans GCplus : 1 an pièces | PEM : 2 ans échange",territoire:"France Métropolitaine uniquement. Aucune garantie DOM-TOM.",alerte:"Vétusté Brandt spécifique : an 2 -20% | an 3 -40% | an 4 -60% | an 5 -80%"},pms:{delai:"3 jours à compter de la date de facture consommateur",email:"assistancetechnique@groupebrandt.com | Hotline : 0892.02.82.82",docs:["Référence produit","N° de série (plaque signalétique)","Photo plaque signalétique","Facture client final","Motif précis de la panne"],alerte:"APR valable 30 jours. Transporteur mandaté par constructeur pour enlèvement."},psg:{email:"Hotline : Brandt 09.69.39.25.25 | De Dietrich 09.69.39.34.34 | agoraplus.com",docs:["Référence produit","N° de série","Facture client final","Motif précis"],alerte:"Sans GCplus : pièces sur Agora, MO et déplacement à la charge du revendeur"},pannes_multiples:{seuil:"3ème panne sous garantie (3 fois pour la même panne par professionnel)",email:"agoraplus.com — demande SOLSAV"},r21j:{delai:"21 jours",email:"agoraplus.com — demande SOLSAV",alerte:""},hors_garantie:{tarif:"Hotline interventions — frais réparation+port aller+retour à la charge du consommateur",vetuste:"An 2 : -20% | An 3 : -40% | An 4 : -60% | An 5 : -80%"},pieces:{email:"agoraplus.com | Tél codification : 0892.02.82.82 option 2",dispo:"GEM : 15 ans (depuis 01/01/2024) — 20 ans tables induction et fours pyrolyse | PEM : 10 ans",tarif_hg:""},contacts:[{role:"Directeur SAV",tel:"06.14.61.53.76",email:"gauthier.lopez@groupebrandt.com",desc:"Interlocuteur SAV principal"},{role:"Resp. Service Interventions",tel:"01.34.30.66.56",email:"gilles.maes@groupebrandt.com",desc:"Gestion interventions"},{role:"Hotline Technique Revendeurs",tel:"0892.02.82.82",email:"assistance.technique@groupebrandt.com",desc:"Support technique + solutions"},{role:"Suivi Dossiers",tel:"",email:"cnacpro@groupebrandt.com",desc:"Suivi dossiers SAV"},{role:"Administration des Ventes",tel:"",email:"administrationdesventes@groupebrandt.com",desc:"Ouverture compte + GCplus"}],tarifs:[]}},{id:"beko",f:"Beko France",m:"Beko / Hotpoint / Indesit / Whirlpool",y:"2025",data:{fournisseur:"Beko France",marque:"Beko / Hotpoint / Indesit / Whirlpool",periode:"2025",alertes:["Depuis 24/11/2025 : Beko France gère aussi Hotpoint Indesit et Whirlpool","Depuis 01/07/2025 : pièces Beko à commander sur Agora via Whirlpool","GCplus 20€/vente posable pour garantie pièces+MO+déplacement","Casse occulte : 3 jours date de livraison constructeur"],garantie:{duree:"GEM Pose Libre : 2 ans pièces | GEM Encastrable : 2 ans pièces+MO+déplacement | PEM : 2 ans | GCplus posable : 20€ HT pour pièces+MO+déplacement",territoire:"France Métropolitaine uniquement. Aucune garantie DOM-TOM.",alerte:"ProSmart Inverter : garantie 10 ans sur moteurs lave-linge/vaisselle et compresseurs"},pms:{delai:"8 jours à compter de la date de facture client final",email:"technique.fr@beko.com",docs:["Référence produit","N° de série (plaque signalétique)","Facture client final","Motif précis de la panne"],alerte:"GEM : accord de retour sous 72h"},psg:{email:"GEM Encastrable : 08.06.80.29.92 (consommateur) | 0892.167.956 (revendeur) | technique.fr@beko.com",docs:["Référence produit","N° de série","Facture client final","Motif précis"],alerte:"GEM Posable sans GCplus : MO et déplacement à la charge du revendeur"},pannes_multiples:{seuil:"3ème panne (2 pannes identiques par station agréée)",email:"dominique.pelloquin@beko.fr"},r21j:{delai:"21 jours",email:"suividossier@beko.fr",alerte:"Joindre : coordonnées centre + référence pièce + N° dossier station"},hors_garantie:{tarif:"Station technique agréée — frais aller+retour à la charge du consommateur",vetuste:"Non précisé"},pieces:{email:"agoraplus.com (via Whirlpool depuis 01/07/2025) | SDS",dispo:"GEM + fours posables : 12 ans | Aspirateurs : 9 ans | PEM réparables : 4 ans",tarif_hg:""},contacts:[{role:"Responsable Assistance Technique",tel:"07.62.75.62.16",email:"dominique.pelloquin@beko.fr",desc:"Contact technique principal"},{role:"Hotline Revendeurs",tel:"0892.167.956",email:"technique.fr@beko.com",desc:"0,40€/min — mar-ven 9h-16h30"},{role:"Service Garantie",tel:"",email:"service_garantie@beko.com",desc:"Facturation, saisie ISG Agora"},{role:"Réseau Stations Techniques",tel:"07.62.41.60.55",email:"philippe.belotti@beko.fr",desc:"Responsable réseau stations"},{role:"Pièces Détachées ADV",tel:"0810.304.011 (choix 4)",email:"herve.dangleant@beko.com",desc:"Commandes pièces"},{role:"Hotline Consommateurs",tel:"0.806.802.992",email:"",desc:"Service consommateurs"}],tarifs:[]}},{id:"novy",f:"Novy",m:"Novy",y:"2021",data:{fournisseur:"Novy SAS",marque:"Novy",periode:"2021",alertes:["PMS non applicable sur les produits Novy — contacter directement le Responsable SAV","Casse occulte : 8 jours calendaires à compter de la date de livraison","Hors garantie pièces non disponibles : remise 50% sur appareil neuf (produit < 7 ans)"],garantie:{duree:"GEM : 5 ans Pièces (avec MO et déplacement si installation conforme par professionnel agréé)",territoire:"France Métropolitaine uniquement. Aucune garantie DOM-TOM.",alerte:"MO+déplacement : installation en France par professionnel agréé + composants accessibles"},pms:{delai:"PMS non applicable — contacter Responsable SAV directement",email:"sav@novy.fr | Tél : 03.20.94.88.13",docs:["Référence produit","N° de série","Facture client final","Motif précis de la panne"],alerte:"Novy mandate une station technique agréée après contact"},psg:{email:"sav@novy.fr | Tél : 03.20.94.88.13",docs:["Référence produit","N° de série","Facture client final","Motif précis de la panne"],alerte:"Novy mandate directement une station technique agréée"},pannes_multiples:{seuil:"3ème panne sous garantie (2 pannes par station agréée)",email:"sav@novy.fr"},r21j:{delai:"21 jours",email:"sav@novy.fr — demande de remplacement produit",alerte:""},hors_garantie:{tarif:"Hotline clients pour station technique la plus proche — frais à la charge du client",vetuste:"Rupture pièces : remise 50% sur appareil neuf (produit < 7 ans)"},pieces:{email:"sav@novy.fr",dispo:"7 ans à compter de la date de vente au consommateur",tarif_hg:""},contacts:[{role:"Directeur SAV / Hotline Revendeurs",tel:"03.20.94.88.13",email:"sav@novy.fr",desc:"Contact unique SAV revendeurs"},{role:"Hotline Clients",tel:"03.20.94.06.62",email:"sav@novy.fr",desc:"Support consommateurs"}],tarifs:[]}},{id:"airlux",f:"Airlux (Be Digital)",m:"Airlux / Glemgas",y:"2025",data:{fournisseur:"Airlux SAS",marque:"Airlux / Glemgas",periode:"2025",alertes:["PMS : déclaration sous 15 jours ouvrés après facture consommateur","Casse occulte : 3 jours calendaires suivant livraison constructeur","Appareils gaz : installation OBLIGATOIRE par personne certifiée gaz","Achat plateforme : NOM + N° adhérent obligatoire","Appareils stockés plus de 5 ans : plus de garantie constructeur"],garantie:{duree:"2 ans pièces+MO — France Métropolitaine uniquement",territoire:"France Métropolitaine uniquement. Aucune garantie COM.",alerte:"Si vente > 18 mois après facture Airlux : restrictions possibles sur prise en charge"},pms:{delai:"15 jours ouvrés suivant la date de facture consommateur",email:"dirsav@airlux.com",docs:["Facture consommateur","Facture d'achat à Airlux","N° de série + photo plaque signalétique","Photos emballage d'origine + étiquette produit","Descriptif précis et détaillé de la panne"],alerte:"PMS concerne uniquement le fonctionnement intrinsèque du produit"},psg:{email:"garantie@airlux.com",docs:["Type + modèle produit","N° de série + photo plaque","Facture consommateur","Facture achat Airlux","Contact pour RDV (tél + email)","Adresse exacte du lieu produit","Description précise de la panne"],alerte:"Garantie exclut : dommage transport/pose, défaut installation, bris de verre"},pannes_multiples:{seuil:"À partir de la 3ème panne avérée durant la période de garantie",email:"garantie@airlux.com + dirsav@airlux.com"},r21j:{delai:"21 jours ouvrés suivant la commande de la pièce",email:"piecesdetachees@airlux.com",alerte:"Joindre : facture achat consommateur + copie bon de commande pièce non livrée"},hors_garantie:{tarif:"90€ HT pour 30km ou moins | +5€ HT par tranche 10km | +30€ HT par appareil supplémentaire même mission",vetuste:"Mois 25-36 : -40% | Mois 37-48 : -50% | Mois 49-60 : -60%"},pieces:{email:"piecesdetachees@airlux.com | Tél : 03.24.56.80.48",dispo:"5 ans pièces fonctionnelles (7 ans réfrigérateurs) | 5 ans pièces esthétiques",tarif_hg:""},contacts:[{role:"Direction SAV",tel:"03.24.56.80.40",email:"dirsav@airlux.com",desc:"Questions générales SAV, PMS"},{role:"Garantie et Interventions",tel:"03.24.56.67.04",email:"garantie@airlux.com",desc:"Prises en charge garantie"},{role:"Pièces Détachées",tel:"03.24.56.80.48",email:"piecesdetachees@airlux.com",desc:"Commandes pièces"},{role:"Logistique SAV",tel:"03.24.56.80.49",email:"logistique-sav@airlux.com",desc:"Suivi expéditions"}],tarifs:[{type:"Intervention",famille:"30km ou moins aller",montant:"90€ HT"},{type:"Supplément kilométrique",famille:"Plus de 30km",montant:"5€ HT / 10km"},{type:"Appareil supplémentaire",famille:"Même mission",montant:"30€ HT"}]}},{id:"delonghi",f:"Delonghi Group",m:"De'Longhi / Kenwood / Braun / Nutribullet",y:"2026",data:{fournisseur:"Delonghi Group France",marque:"De'Longhi / Kenwood / Braun / Nutribullet",periode:"2026",alertes:["Emballage défectueux : dommages de transport = refus de prise en charge garantie","Demandes incomplètes : ni traitées ni conservées","PMS : 8 jours suivants la date d'achat ou de livraison","Achat plateforme : NOM + N° adhérent obligatoire"],garantie:{duree:"2 ans pièces+MO par retour atelier CSA | Spécialista/machines café avec broyeur (hors Magnifica) : 3 ans | Kenwood Chef/Chef XL/Major Titanium : 3 ans | Accessoires Kenwood vendus seuls (références spécifiques) : 10 ans",territoire:"France Métropolitaine uniquement. DOM-TOM : non applicable.",alerte:"Appareils classés R (réparable), RH (réparable HG seulement) ou E (échangeable) — voir liste"},pms:{delai:"8 jours suivants la date d'achat ou de livraison",email:"sav.adm.fr@delonghigroup.com (formulaire RMA obligatoire)",docs:["Formulaire RMA dûment complété","Documents justificatifs indispensables"],alerte:"Appareils type R : envoyer en CSA. Appareils type E : échange. Port aller à charge du revendeur, retour à charge du fournisseur."},psg:{email:"sav.adm.fr@delonghigroup.com | savcsa.fr@delonghigroup.com",docs:["Formulaire RMA complété","Facture client final","Documents justificatifs"],alerte:"Port aller à la charge du Revendeur | Port retour à la charge du Fournisseur"},pannes_multiples:{seuil:"Non applicable",email:""},r21j:{delai:"21 jours ouvrés ou 30 jours calendaires en station technique",email:"savcsa.fr@delonghigroup.com (formulaire Solution Commerciale)",alerte:""},hors_garantie:{tarif:"Station technique agréée CSA — frais port aller+retour à la charge du client",vetuste:"Non applicable"},pieces:{email:"MPM : contact@servero.fr (04.67.79.85.70) | ASWO : aswo@aswo.com | SOS Accessoire : sos-accessoire.com",dispo:"Jusqu'à 10 ans pour les appareils réparables",tarif_hg:""},contacts:[{role:"Directeur SAV",tel:"01.41.32.30.16",email:"pascal.gilles@delonghigroup.com",desc:"Direction SAV"},{role:"Resp. Technique et Qualité",tel:"01.41.32.30.06",email:"resp.technique.fr@delonghi.com",desc:"Support technique et qualité"},{role:"Accord de Retour / PMS / RMA",tel:"06.09.11.31.86",email:"sav.adm.fr@delonghigroup.com",desc:"Selma BOUKERSI / Monia KESBI"},{role:"Pièces / PM / Solution Commerciale",tel:"06.09.11.57.89",email:"savcsa.fr@delonghigroup.com",desc:"Pièces détachées et pannes multiples"},{role:"Hotline De'Longhi",tel:"0970.809.433",email:"",desc:"Consommateurs De'Longhi"},{role:"Hotline Kenwood",tel:"0970.809.133",email:"",desc:"Consommateurs Kenwood"}],tarifs:[]}},{id:"cuisinart",f:"Babyliss",m:"Cuisinart",y:"2025",data:{fournisseur:"Babyliss / Conair",marque:"Cuisinart",periode:"2025",alertes:["Procedure spécifique : produits conservés chez le distributeur et contrôlés par le fournisseur","Rapport de visite SAV contresigné obligatoire pour avoir","DOM-TOM : pas de SAV — contacter export/ADV"],garantie:{duree:"2 ans sur tous les produits électriques (ou durée mentionnée sur l'emballage)",territoire:"France Métropolitaine uniquement. DOM-TOM : contacter export.",alerte:"Accessoires et consommables non pris en charge par la garantie"},pms:{delai:"Contacter la Hotline pour tout dysfonctionnement",email:"Hotline : 00800.2011.2014 | cuisinart_france@conair.com",docs:["Référence produit","Facture d'achat","Motif précis de la panne"],alerte:"Produits conservés chez le distributeur — contrôle régulier par fournisseur"},psg:{email:"Hotline : 00800.2011.2014 | cuisinart_france@conair.com",docs:["Référence produit","Facture d'achat","Motif précis"],alerte:"Avoir uniquement après rapport de visite SAV contresigné par le distributeur"},pannes_multiples:{seuil:"Contacter la hotline",email:"cuisinart_france@conair.com"},r21j:{delai:"Contacter la hotline",email:"cuisinart_france@conair.com",alerte:""},hors_garantie:{tarif:"Contacter le service consommateur Cuisinart",vetuste:""},pieces:{email:"Hotline : 00800.2011.2014 | cuisinart_france@conair.com",dispo:"Non précisé",tarif_hg:""},contacts:[{role:"Responsable SAV",tel:"",email:"herve.mathieu@conair.com",desc:"Responsable SAV"},{role:"Assistante SAV",tel:"03.27.37.81.06",email:"maggy_farineaux@conair.com",desc:"Assistante SAV"},{role:"Hotline Revendeurs / Consommateurs",tel:"00800.2011.2014",email:"cuisinart_france@conair.com",desc:"Contact principal SAV"},{role:"Direction Commerciale",tel:"",email:"alexandra_dominguez@conair.com",desc:"Alexandra DOMINGUEZ / Sophie NGUYEN"}],tarifs:[]}},{id:"electrolux_gem",f:"Electrolux",m:"Electrolux / AEG / Faure GEM",y:"2024",data:{fournisseur:"Electrolux Home Products France",marque:"Electrolux / AEG / Faure GEM",periode:"2024",alertes:["Casse occulte : 2 jours calendaires à compter de la date de livraison constructeur","GCplus : enregistrement obligatoire sous 1 mois pour garantie 2 ans pièces+MO+déplacement","Sans GCplus : 1 an pièces uniquement (conditions 2023)","R21j : relance à 14 jours obligatoire sur agoraplus.com"],garantie:{duree:"Avec GCplus : 2 ans pièces+MO+déplacement (Electrolux, AEG, Faure) | Sans GCplus : 1 an pièces",territoire:"France Métropolitaine uniquement. DOM-TOM : rachat de garantie possible.",alerte:"PMS non reconnue sauf exceptions : panne lourde (moufle, bloc laveur, compresseur, moteur)"},pms:{delai:"PMS non reconnue sauf panne lourde — appeler Hotline Revendeur 0.892.702.433",email:"Hotline revendeur : 08.92.70.24.33 | SOLSAV sur agoraplus.com",docs:["Référence produit","N° de série (plaque signalétique)","Photo plaque signalétique","Facture client final","Motif précis de la panne"],alerte:"PAS DE REPRISE PRODUIT SANS ACCORD PREALABLE DE LA MARQUE via Inspecteurs Techniques"},psg:{email:"agoraplus.com | technique.frs@electrolux.com | 08.92.70.24.33",docs:["Référence produit","N° de série","Facture client final","Motif précis de la panne"],alerte:"1ère année : MO et déplacement à la charge du Revendeur si pas de GCplus"},pannes_multiples:{seuil:"3ème panne sous garantie (2 pannes par station agréée) — Inspecteur Technique valide",email:"agoraplus.com — SOLSAV"},r21j:{delai:"21 jours (commande pièce + relance obligatoire à 14 jours)",email:"agoraplus.com — SOLSAV",alerte:"Relance à 14 jours obligatoire + joindre justificatifs commande"},hors_garantie:{tarif:"Station technique agréée — frais à la charge du consommateur",vetuste:"Non précisé"},pieces:{email:"pieces.revendeurs@electrolux.com | agoraplus.com | SDS | ASWO",dispo:"GEM (Electrolux et AEG) : 15 ans (depuis 01/01/2024) | PEM Electrolux : 13 ans",tarif_hg:"26% de remise via Agora"},contacts:[{role:"Responsable d'affaires",tel:"07.52.67.63.40",email:"adrien.henry@electrolux.com",desc:"Contact commercial principal"},{role:"Responsable SAV Qualité",tel:"",email:"bertrand.villie@electrolux.com",desc:"SAV, qualité et réglementation"},{role:"Hotline Revendeurs",tel:"08.92.70.24.33",email:"technique.frs@electrolux.com",desc:"Support technique revendeurs"},{role:"Hotline Consommateurs",tel:"0809.100.100",email:"info.conso@electrolux.fr",desc:"Demande intervention SAV"},{role:"Service Pièces Détachées",tel:"",email:"pieces.revendeurs@electrolux.com",desc:"Pièces détachées revendeurs"},{role:"GCplus Electrolux",tel:"03.44.62.22.76",email:"sandrine.polin@electrolux.com",desc:"Gestion contrats GCplus"}],tarifs:[]}},{id:"electrolux_pem",f:"Electrolux",m:"Electrolux PEM",y:"2024",data:{fournisseur:"Electrolux France SAS PEM",marque:"Electrolux PEM / Tornado",periode:"2024",alertes:["PMS : 10 jours à compter de la date de facture client final","Casse occulte : non précisé","Achat plateforme : NOM + N° adhérent obligatoire"],garantie:{duree:"2 ans Pièces et MO si réparation en station technique agréée (SBE Saint-Léonard)",territoire:"France Métropolitaine uniquement. DOM-TOM : non précisé.",alerte:"Frais d'envoi en station à la charge du revendeur — seul le port retour pris en charge"},pms:{delai:"10 jours à compter de la date de facture client final",email:"sce.tech.sa@electrolux.com | Station SBE Saint-Léonard",docs:["Référence produit","N° de série (plaque signalétique)","Facture client final","Motif précis de la panne"],alerte:"Envoi produit au centre de traitement Electrolux (SBE 62360 Saint-Léonard)"},psg:{email:"Station SBE : 1 Boulevard de la Liane 62360 Saint-Léonard | agoraplus.com",docs:["Référence produit","N° de série","Facture client final","Motif précis"],alerte:"Transport aller à la charge de l'expéditeur | Transport retour à la charge du constructeur"},pannes_multiples:{seuil:"3ème panne sous garantie (2 pannes par station)",email:"sce.tech.sa@electrolux.com"},r21j:{delai:"21 jours",email:"Service Technique Electrolux",alerte:""},hors_garantie:{tarif:"Station technique agréée — frais à la charge du consommateur",vetuste:"Non précisé"},pieces:{email:"agoraplus.com | franck.lejeune@electrolux.com | Tél : 03.44.62.25.30",dispo:"PEM Electrolux : 13 ans (depuis 01/01/2024) | Avant 01/01/2024 : 10 ans",tarif_hg:""},contacts:[{role:"Coordinateur SAV PEM Revendeurs",tel:"03.44.62.25.30",email:"franck.lejeune@electrolux.com",desc:"Contact principal PEM revendeurs"},{role:"Accord de Retour",tel:"",email:"sce.tech.sa@electrolux.com",desc:"Accords de retour pour revendeurs"},{role:"Hotline Consommateurs Electrolux",tel:"0800.500.020",email:"service.electrolux@electrolux.com",desc:"Consommateurs Electrolux"},{role:"Hotline Consommateurs Tornado",tel:"0800.500.041",email:"service.tornado@electrolux.com",desc:"Consommateurs Tornado"},{role:"Station Centre Technique SBE",tel:"",email:"",desc:"1 Bd de la Liane 62360 Saint-Léonard"}],tarifs:[]}}];
+
+const openGroups={};
+let current=null;
+
+function buildSidebar(q){
+  q=(q||"").toLowerCase();
+  const grouped={};
+  DATA.forEach(f=>{
+    if(q&&!f.f.toLowerCase().includes(q)&&!f.m.toLowerCase().includes(q))return;
+    if(!grouped[f.f])grouped[f.f]=[];
+    grouped[f.f].push(f);
+  });
+  const sb=document.getElementById("sidebar");
+  sb.innerHTML=Object.keys(grouped).sort().map(name=>{
+    const items=grouped[name];
+    const isOpen=openGroups[name]||!!q;
+    const gid="g_"+name.replace(/[^a-z0-9]/gi,"_");
+    return `<div class="fgroup">
+      <div class="fhdr ${isOpen?"open":""}" data-name="${name.replace(/"/g,'&quot;')}" data-gid="${gid}" onclick="toggleGEl(this)">
+        <span class="chev ${isOpen?"open":""}">></span>
+        <span class="fname">${name}</span>
+        <span class="cbadge">${items.length}</span>
+      </div>
+      <div class="mlist ${isOpen?"open":""}" id="${gid}">
+        ${items.map(i=>`<div class="mitem ${current&&current.id===i.id?"active":""}" data-id="${i.id}" onclick="showEl(this)">
+          <span style="font-size:8px;color:var(--pink)">*</span>
+          <span style="flex:1">${i.m}</span>
+          <span class="ytag">${i.y}</span>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleG(name,gid){
+  openGroups[name]=!openGroups[name];
+  buildSidebar(document.getElementById("search").value);
+}
+
+function toggleGEl(el){
+  const name=el.getAttribute("data-name");
+  const gid=el.getAttribute("data-gid");
+  toggleG(name,gid);
+}
+
+function showEl(el){
+  const id=el.getAttribute("data-id");
+  show(id);
+}
+
+function show(id){
+  const entry=DATA.find(d=>d.id===id);
+  if(!entry)return;
+  current=entry;
+  buildSidebar(document.getElementById("search").value);
+  render(entry.data,entry.f,entry.m,entry.y);
+}
+
+function row(label,val,cls){
+  if(!val)return"";
+  return`<div class="ilabel">${label}</div><div class="ival ${cls||""}">${val}</div>`;
+}
+function emailRow(label,val){
+  if(!val)return"";
+  return`<div class="ilabel">${label}</div><div class="ival em">${val}</div>`;
+}
+function docList(docs){
+  if(!docs||!docs.length)return"";
+  return docs.map(d=>`<div class="doc">${d}</div>`).join("");
+}
+function card(title,html){
+  return`<div class="card"><div class="ctitle">${title}</div>${html}</div>`;
+}
+function section(t){return`<div class="stitle">${t}</div>`;}
+
+function badgeColor(y){
+  const yr=parseInt(y);
+  if(yr>=2026)return"pink";
+  if(yr>=2025)return"purple";
+  if(yr>=2024)return"teal";
+  return"yellow";
+}
+
+function render(d,fournisseur,marque,annee){
+  const alertes=d.alertes&&d.alertes.length?`<div class="alert-bar">
+    <div class="alert-title">! Points de vigilance</div>
+    ${d.alertes.map(a=>`<div class="alert-item">${a}</div>`).join("")}
+  </div>`:"";
+
+  const contacts=d.contacts&&d.contacts.filter(c=>c.role).length?`<div class="cgrid">
+    ${d.contacts.filter(c=>c.role).map(c=>`<div class="ccard">
+      <div class="crole">${c.role}</div>
+      ${c.desc?`<div class="cdesc">${c.desc}</div>`:""}
+      ${c.tel&&c.tel!="?"?`<div class="cline">Tel. ${c.tel}</div>`:""}
+      ${c.email?`<div class="cline">Email: <a href="mailto:${c.email}">${c.email}</a></div>`:""}
+    </div>`).join("")}
+  </div>`:"";
+
+  const tarifs=d.tarifs&&d.tarifs.filter(t=>t.montant).length?`<table class="tarifs">
+    <thead><tr><th>Type</th><th>Famille</th><th>Forfait</th></tr></thead>
+    <tbody>${d.tarifs.filter(t=>t.montant).map(t=>`<tr>
+      <td>${t.type||"—"}</td>
+      <td>${t.famille||"—"}</td>
+      <td class="tv">${t.montant}</td>
+    </tr>`).join("")}</tbody>
+  </table>`:"";
+
+  document.getElementById("main").innerHTML=`
+    <div class="fiche-header">
+      <div>
+        <div class="fiche-title">${d.fournisseur||fournisseur}</div>
+        <div class="fiche-sub">${d.marque||marque}</div>
+      </div>
+      <div class="badges">
+        <span class="badge badge-${badgeColor(annee)}">${annee}</span>
+        ${d.periode?`<span class="badge badge-purple">${d.periode}</span>`:""}
+      </div>
+    </div>
+    ${alertes}
+    ${section(" Garantie & PMS")}
+    <div class="grid2">
+      ${card("Garantie constructeur",
+        row("Durée",d.garantie&&d.garantie.duree,"hi")+
+        row("Territoire",d.garantie&&d.garantie.territoire)+
+        (d.garantie&&d.garantie.alerte?`<div class="ival warn">/!\ ${d.garantie.alerte}</div>`:"")
+      )}
+      ${card("PMS — Panne à la mise en service",
+        row("Délai maximum",d.pms&&d.pms.delai,"hi")+
+        emailRow("Envoyer à",d.pms&&d.pms.email)+
+        (d.pms&&d.pms.docs&&d.pms.docs.length?`<div class="ilabel">Documents obligatoires</div>${docList(d.pms.docs)}`:"")+
+        (d.pms&&d.pms.alerte?`<div class="ival warn" style="margin-top:8px">/!\ ${d.pms.alerte}</div>`:"")
+      )}
+    </div>
+    ${section(" Procédures garantie")}
+    <div class="grid2">
+      ${card("Panne sous garantie",
+        emailRow("Contact",d.psg&&d.psg.email)+
+        (d.psg&&d.psg.docs&&d.psg.docs.length?`<div class="ilabel">Documents</div>${docList(d.psg.docs)}`:"")+ 
+        (d.psg&&d.psg.alerte?`<div class="ival warn" style="margin-top:8px">/!\ ${d.psg.alerte}</div>`:"")
+      )}
+      ${card("Pannes multiples & Règle 21j",
+        row("Seuil pannes multiples",d.pannes_multiples&&d.pannes_multiples.seuil,"hi")+
+        emailRow("Contact PM",d.pannes_multiples&&d.pannes_multiples.email)+
+        (d.r21j&&d.r21j.delai?`<div style="border-top:1.5px solid var(--border);margin:10px 0;padding-top:10px">
+          ${row("Règle 21j — délai",d.r21j.delai)}
+          ${emailRow("Contact R21j",d.r21j.email)}
+          ${d.r21j.alerte?`<div class="ival warn">/!\ ${d.r21j.alerte}</div>`:""}
+        </div>`:"")
+      )}
+    </div>
+    ${section(" Hors garantie & Pièces")}
+    <div class="grid2">
+      ${card("Hors garantie & Vétusté",
+        row("Tarifs",d.hors_garantie&&d.hors_garantie.tarif)+
+        row("Vétusté",d.hors_garantie&&d.hors_garantie.vetuste)
+      )}
+      ${card("Pièces détachées",
+        emailRow("Commander à",d.pieces&&d.pieces.email)+
+        row("Disponibilité légale",d.pieces&&d.pieces.dispo,"hi")+
+        (d.pieces&&d.pieces.tarif_hg?row("Tarif HG",d.pieces.tarif_hg):"")
+      )}
+    </div>
+    ${tarifs?section(" Forfaits d'intervention")+`<div class="card" style="margin-bottom:12px">${tarifs}</div>`:""}
+    ${contacts?section("Tel. Contacts")+`<div class="card">${contacts}</div>`:""}
+  `;
+}
+
+buildSidebar();
+</script>
+</body>
+</html>
