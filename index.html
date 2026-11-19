@@ -8,42 +8,46 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* ── HEADER ── */
 header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;align-items:center;gap:12px;flex-shrink:0}
 .logo{font-weight:700;font-size:15px;letter-spacing:-.3px}
 .logo span{color:#888;font-weight:400}
 #h-status{margin-left:auto;font-size:12px;color:#888}
 
-/* ── LAYOUT ── */
 .app{display:flex;flex:1;overflow:hidden}
 
-/* ── LEFT PANEL ── */
 .left{width:260px;flex-shrink:0;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
 .search-wrap{padding:10px;border-bottom:1px solid #e0e0e0}
 #search{width:100%;padding:7px 10px;border:1px solid #d0d0d0;border-radius:8px;font-size:13px;outline:none;background:#f5f5f7}
 #search:focus{border-color:#0071e3;background:#fff}
-.list-header{padding:6px 12px;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+.list-header{padding:6px 12px;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #f0f0f0}
 #brand-list{flex:1;overflow-y:auto;padding:4px 0}
-.brand-item{padding:9px 14px;cursor:pointer;font-size:13px;border-radius:0;display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent}
+.brand-item{padding:9px 14px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent}
 .brand-item:hover{background:#f5f5f7}
 .brand-item.active{background:#e8f1fd;border-left-color:#0071e3;color:#0071e3;font-weight:600}
 .brand-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .brand-src{font-size:10px;color:#aaa;flex-shrink:0;margin-left:6px}
-.brand-modified{width:6px;height:6px;border-radius:50%;background:#30a76b;flex-shrink:0;margin-left:4px;display:none}
-.brand-item.modified .brand-modified{display:block}
-
 .btn-add{margin:8px;padding:8px;background:#f5f5f7;border:1px dashed #c0c0c0;border-radius:8px;text-align:center;font-size:12px;color:#555;cursor:pointer;transition:all .15s}
 .btn-add:hover{background:#e8f1fd;border-color:#0071e3;color:#0071e3}
 
-/* ── RIGHT PANEL ── */
 .right{flex:1;overflow-y:auto;padding:0}
 .empty-right{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#888;gap:8px}
 .empty-right strong{font-size:16px;color:#555}
 
+/* ── BARRE DE PROGRESSION ── */
+.boot-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px}
+.boot-label{font-size:14px;color:#555;font-weight:500}
+.boot-sub{font-size:12px;color:#aaa;text-align:center;line-height:1.6;max-width:340px}
+.progress-track{width:300px;height:6px;background:#e8e8e8;border-radius:6px;overflow:hidden}
+.progress-bar{height:100%;background:#0071e3;border-radius:6px;width:0%;transition:width .4s ease;animation:pulse-bar 2s ease-in-out infinite alternate}
+@keyframes pulse-bar{from{opacity:1}to{opacity:.7}}
+.progress-pct{font-size:12px;color:#888;font-weight:600;min-width:40px;text-align:right}
+.progress-row{display:flex;align-items:center;gap:10px;width:300px}
+.retry-btn{background:#0071e3;color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;display:none}
+.retry-btn:hover{background:#0051a3}
+
 /* ── FICHE ── */
 .fiche{padding:24px;max-width:760px}
 .fiche-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px}
-.fiche-title-wrap{}
 .fiche-title{font-size:22px;font-weight:700;line-height:1.2}
 .fiche-sub{font-size:13px;color:#888;margin-top:3px}
 .fiche-actions{display:flex;gap:8px;flex-shrink:0}
@@ -53,34 +57,33 @@ header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;ali
 .btn-save:disabled{opacity:.4;cursor:not-allowed}
 .btn-del{background:#fff;color:#c0392b;border:1px solid #e0d0d0}
 .btn-del:hover{background:#fdf0f0}
-.btn-cancel{background:#fff;color:#555;border:1px solid #d0d0d0}
-.btn-cancel:hover{background:#f5f5f7}
 
 .section{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:16px;margin-bottom:12px}
 .section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0f0f0}
-
 .field-row{display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center;margin-bottom:8px}
 .field-label{font-size:12px;font-weight:600;color:#555}
 .field-input{font-size:13px;padding:6px 9px;border:1px solid #d8d8d8;border-radius:7px;width:100%;font-family:inherit;background:#fafafa;outline:none;color:#1d1d1f;transition:border .15s,background .15s}
 .field-input:focus{border-color:#0071e3;background:#fff;box-shadow:0 0 0 3px rgba(0,113,227,.1)}
 .field-input.email{font-family:monospace;font-size:12px}
 
-/* contacts table */
 .contacts-head{display:grid;grid-template-columns:140px 130px 1fr 30px;gap:6px;margin-bottom:4px}
 .contacts-head span{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em}
 .contact-row{display:grid;grid-template-columns:140px 130px 1fr 30px;gap:6px;margin-bottom:5px;align-items:center}
 .contact-row .field-input{font-size:12px;padding:5px 7px}
-.del-btn{background:#fdf0f0;border:1px solid #f0d8d8;border-radius:6px;color:#c0392b;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;font-weight:700;flex-shrink:0}
+.del-btn{background:#fdf0f0;border:1px solid #f0d8d8;border-radius:6px;color:#c0392b;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
 .del-btn:hover{background:#c0392b;color:#fff;border-color:#c0392b}
 .add-contact{font-size:12px;color:#0071e3;cursor:pointer;background:none;border:none;padding:4px 0;font-weight:600}
 .add-contact:hover{text-decoration:underline}
 
-/* save feedback */
 .save-feedback{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;display:none;margin-left:4px}
 .save-ok{background:#d4f8e8;color:#1a7a40;display:inline-block}
 .save-err{background:#fde8e8;color:#c0392b;display:inline-block}
 
-/* ── NOUVELLE FICHE (paste mode) ── */
+/* fiche loading skeleton */
+.fiche-loading{padding:24px;max-width:760px}
+.skel{background:linear-gradient(90deg,#eee 25%,#f5f5f5 50%,#eee 75%);background-size:200% 100%;animation:skel .9s infinite;border-radius:6px;margin-bottom:10px}
+@keyframes skel{from{background-position:200% 0}to{background-position:-200% 0}}
+
 .paste-panel{padding:24px;max-width:760px}
 .paste-panel h2{font-size:18px;font-weight:700;margin-bottom:6px}
 .paste-panel p{font-size:13px;color:#666;margin-bottom:14px;line-height:1.6}
@@ -90,11 +93,6 @@ header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;ali
 .btn-primary{background:#0071e3;color:#fff;font-size:13px;font-weight:600;padding:9px 20px;border-radius:9px;border:none;cursor:pointer}
 .btn-primary:hover{background:#0051a3}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed}
-
-/* ── LOADING ── */
-.loading{text-align:center;padding:60px;color:#888;font-size:14px}
-.spinner{width:28px;height:28px;border:3px solid #e0e0e0;border-top-color:#0071e3;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
-@keyframes spin{to{transform:rotate(360deg)}}
 
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#d0d0d0;border-radius:5px}
 </style>
@@ -109,18 +107,21 @@ header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;ali
 <div class="app">
   <div class="left">
     <div class="search-wrap">
-      <input id="search" type="text" placeholder="Rechercher une marque…" oninput="filterList()" autocomplete="off">
+      <input id="search" type="text" placeholder="Rechercher une marque…" oninput="filterList()" autocomplete="off" disabled>
     </div>
-    <div class="list-header">
-      <span id="list-count">—</span>
-    </div>
+    <div class="list-header"><span id="list-count">—</span></div>
     <div id="brand-list"></div>
-    <div class="btn-add" onclick="showPaste()">+ Nouvelle fiche</div>
+    <div class="btn-add" onclick="showPaste()" id="btn-add" style="display:none">+ Nouvelle fiche</div>
   </div>
   <div class="right" id="right">
-    <div class="empty-right">
-      <strong>Base SAV</strong>
-      <span>Sélectionnez une marque pour consulter ou modifier sa fiche</span>
+    <div class="boot-screen" id="boot-screen">
+      <div class="boot-label" id="boot-label">Connexion au serveur…</div>
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-bar" id="pbar"></div></div>
+        <span class="progress-pct" id="ppct">0%</span>
+      </div>
+      <div class="boot-sub" id="boot-sub">Première connexion : le serveur peut mettre jusqu'à 30 s à démarrer.</div>
+      <button class="retry-btn" id="retry-btn" onclick="boot()">Réessayer</button>
     </div>
   </div>
 </div>
@@ -128,38 +129,87 @@ header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;ali
 <script>
 const PROXY = 'https://script.google.com/macros/s/AKfycbyD8O5QVGMOpCX7DYwpSchagMK8XzmyGd0D1CYXwBiqd--gTTM-Rcy8RIJv5xvmzow/exec';
 
-let ALL = [];   // array of fiche objects
-let cur = null; // currently shown fiche id
+let ALL = [];
+let CACHE = {};
+let cur = null;
+let bootTimer = null;
 
-// ── BOOT ──────────────────────────────────────────────────────────────────────────────────────
+let pTarget = 0;
+let pCur = 0;
+function setProgress(pct, label, sub) {
+  pTarget = pct;
+  if (label) document.getElementById('boot-label').textContent = label;
+  if (sub !== undefined) document.getElementById('boot-sub').textContent = sub;
+  animProgress();
+}
+function animProgress() {
+  if (pCur < pTarget) {
+    pCur = Math.min(pCur + 1, pTarget);
+    document.getElementById('pbar').style.width = pCur + '%';
+    document.getElementById('ppct').textContent = pCur + '%';
+    requestAnimationFrame(animProgress);
+  }
+}
+function startAutoProgress() {
+  let elapsed = 0;
+  bootTimer = setInterval(() => {
+    elapsed += 500;
+    const target = Math.min(85, Math.round(85 * (1 - Math.exp(-elapsed / 15000))));
+    if (pTarget < target) setProgress(target);
+    if (elapsed > 60000) {
+      clearInterval(bootTimer);
+      setProgress(85, 'Toujours en attente…', 'Le serveur prend plus de temps que prévu.');
+      document.getElementById('retry-btn').style.display = 'inline-block';
+    }
+  }, 500);
+}
+
 async function boot() {
-  setStatus('Chargement…');
-  setRight('<div class="loading"><div class="spinner"></div>Chargement des fiches…</div>');
+  document.getElementById('retry-btn').style.display = 'none';
+  pCur = 0; pTarget = 0;
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('ppct').textContent = '0%';
+  document.getElementById('boot-screen').style.display = 'flex';
+  document.getElementById('right').innerHTML = '';
+  document.getElementById('right').appendChild(document.getElementById('boot-screen'));
+
+  setProgress(5, 'Connexion au serveur…', 'Première connexion : le serveur peut mettre jusqu\'\u00e0 30 s \u00e0 d\u00e9marrer.');
+  startAutoProgress();
+
   try {
-    const r = await fetch(PROXY + '?action=getAllFiches', {redirect:'follow'});
+    const r = await fetch(PROXY + '?action=getList', {redirect:'follow'});
     const data = JSON.parse(await r.text());
-    if (!Array.isArray(data)) throw new Error('Réponse invalide');
+    if (!Array.isArray(data)) throw new Error('R\u00e9ponse invalide');
+
+    clearInterval(bootTimer);
+    setProgress(100, ALL.length + ' fiches charg\u00e9es', '');
+    await new Promise(r2 => setTimeout(r2, 300));
+
     ALL = data;
+    document.getElementById('search').disabled = false;
+    document.getElementById('btn-add').style.display = 'block';
     setStatus(ALL.length + ' fiches');
+    document.getElementById('list-count').textContent = ALL.length + ' marques';
     renderList(ALL);
+    setRight('<div class="empty-right"><strong>Base SAV</strong><span>S\u00e9lectionnez une marque pour consulter ou modifier sa fiche</span></div>');
   } catch(e) {
-    setStatus('Erreur connexion');
-    setRight('<div class="loading" style="color:#c0392b">Impossible de charger les fiches.<br><small>'+e.message+'</small></div>');
+    clearInterval(bootTimer);
+    setProgress(pCur, 'Erreur de connexion', e.message);
+    document.getElementById('retry-btn').style.display = 'inline-block';
+    setStatus('Erreur');
   }
 }
 
 function setStatus(t) { document.getElementById('h-status').textContent = t; }
 
-// ── LIST ───────────────────────────────────────────────────────────────────────────────────────
 function renderList(items) {
   const el = document.getElementById('brand-list');
   document.getElementById('list-count').textContent = items.length + ' marques';
-  if (!items.length) { el.innerHTML = '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">Aucun résultat</div>'; return; }
+  if (!items.length) { el.innerHTML = '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">Aucun r\u00e9sultat</div>'; return; }
   el.innerHTML = items.map(f =>
-    '<div class="brand-item'+(f.id===cur?' active':'')+(f._modified?' modified':'')+'" onclick="showFiche(''+f.id+'')" id="li-'+f.id+'">' +
+    '<div class="brand-item'+(f.id===cur?' active':'')+'" onclick="showFiche(\''+f.id+'\')" id="li-'+f.id+'">' +
     '<span class="brand-name">'+(f.fournisseur||f.marque||f.id)+'</span>' +
     '<span class="brand-src">'+(f.source||'')+'</span>' +
-    '<span class="brand-modified"></span>' +
     '</div>'
   ).join('');
 }
@@ -173,78 +223,56 @@ function filterList() {
   ) : ALL);
 }
 
-// ── FICHE VIEW ────────────────────────────────────────────────────────────────────────────────────
-function showFiche(id) {
+async function showFiche(id) {
   cur = id;
-  // update active state
-  document.querySelectorAll('.brand-item').forEach(el => {
-    el.classList.toggle('active', el.id === 'li-'+id);
-  });
-  const f = ALL.find(x => x.id === id);
-  if (!f) return;
-  setRight('<div class="fiche">' + ficheHTML(f) + '</div>');
+  document.querySelectorAll('.brand-item').forEach(el => el.classList.toggle('active', el.id === 'li-'+id));
+
+  if (CACHE[id]) { setRight('<div class="fiche">' + ficheHTML(CACHE[id]) + '</div>'); return; }
+
+  setRight('<div class="fiche-loading"><div class="skel" style="height:28px;width:60%;margin-bottom:16px"></div><div class="skel" style="height:16px;width:40%;margin-bottom:24px"></div><div class="skel" style="height:120px;margin-bottom:12px"></div><div class="skel" style="height:200px;margin-bottom:12px"></div><div class="skel" style="height:160px"></div></div>');
+
+  try {
+    const r = await fetch(PROXY + '?action=getFiche&id=' + encodeURIComponent(id), {redirect:'follow'});
+    const f = JSON.parse(await r.text());
+    if (f.error) throw new Error(f.error);
+    CACHE[id] = f;
+    if (cur === id) setRight('<div class="fiche">' + ficheHTML(f) + '</div>');
+  } catch(e) {
+    if (cur === id) setRight('<div class="empty-right" style="color:#c0392b"><strong>Erreur</strong><span>'+e.message+'</span></div>');
+  }
 }
 
 function ficheHTML(f) {
-  const contacts = f.contacts || [];
-  return `
-  <div class="fiche-head">
-    <div class="fiche-title-wrap">
-      <div class="fiche-title">${esc(f.fournisseur||'')} <span style="font-size:14px;color:#888;font-weight:400">${esc(f.marque||'')}</span></div>
-      <div class="fiche-sub">${esc(f.source||'')} · ${esc(f.periode||'')}</div>
-    </div>
-    <div class="fiche-actions">
-      <span class="save-feedback" id="sfb"></span>
-      <button class="btn btn-del" onclick="deleteFiche('${f.id}')">Supprimer</button>
-      <button class="btn btn-save" onclick="saveFiche('${f.id}')" id="btn-save-${f.id}">Sauvegarder</button>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Identification</div>
-    <div class="field-row"><span class="field-label">Fournisseur</span><input class="field-input" id="f-fournisseur" value="${esc(f.fournisseur||'')}"></div>
-    <div class="field-row"><span class="field-label">Marque</span><input class="field-input" id="f-marque" value="${esc(f.marque||'')}"></div>
-    <div class="field-row"><span class="field-label">Plateforme</span><input class="field-input" id="f-source" value="${esc(f.source||'')}"></div>
-    <div class="field-row"><span class="field-label">Période</span><input class="field-input" id="f-periode" value="${esc(f.periode||'')}"></div>
-    <div class="field-row"><span class="field-label">Garantie</span><input class="field-input" id="f-garantie" value="${esc(f.garantie||'')}"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Contacts SAV</div>
-    <div class="contacts-head"><span>Rôle</span><span>Téléphone</span><span>Email</span><span></span></div>
-    <div id="contacts-list">
-      ${contacts.map((c,i) => contactRowHTML(i, c)).join('')}
-    </div>
-    <button class="add-contact" onclick="addContact()">+ Ajouter un contact</button>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Emails procéduraux</div>
-    <div class="field-row"><span class="field-label">PMS</span><input class="field-input email" id="f-pms_email" value="${esc(f.pms_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Sous garantie</span><input class="field-input email" id="f-psg_email" value="${esc(f.psg_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Pannes multiples</span><input class="field-input email" id="f-pm_email" value="${esc(f.pm_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Règle 21j</span><input class="field-input email" id="f-r21j_email" value="${esc(f.r21j_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Pièces détachées</span><input class="field-input email" id="f-pieces_email" value="${esc(f.pieces_email||'')}"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Infos complémentaires</div>
-    <div class="field-row"><span class="field-label">PMS délai max</span><input class="field-input" id="f-pms_delai" value="${esc(f.pms_delai||'')}"></div>
-    <div class="field-row"><span class="field-label">Règle 21j délai</span><input class="field-input" id="f-r21j_delai" value="${esc(f.r21j_delai||'')}"></div>
-    <div class="field-row"><span class="field-label">Seuil pannes mult.</span><input class="field-input" id="f-pm_seuil" value="${esc(f.pm_seuil||'')}"></div>
-    <div class="field-row"><span class="field-label">Pièces dispo légale</span><input class="field-input" id="f-pieces_dispo" value="${esc(f.pieces_dispo||'')}"></div>
-    <div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Points vigilance</span><textarea class="field-input" id="f-alertes" rows="3" style="resize:vertical">${esc(f.alertes||'')}</textarea></div>
-    <div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Notes libres</span><textarea class="field-input" id="f-notes" rows="3" style="resize:vertical">${esc(f.notes||'')}</textarea></div>
-  </div>`;
+  const contacts = Array.isArray(f.contacts) ? f.contacts : (f.contacts ? JSON.parse(f.contacts) : []);
+  return '<div class="fiche-head"><div><div class="fiche-title">'+esc(f.fournisseur||'')+' <span style="font-size:14px;color:#888;font-weight:400">'+esc(f.marque||'')+'</span></div><div class="fiche-sub">'+esc(f.source||'')+(f.source&&f.periode?' \u00b7 ':'')+esc(f.periode||'')+'</div></div><div class="fiche-actions"><span class="save-feedback" id="sfb"></span><button class="btn btn-del" onclick="deleteFiche(\''+f.id+'\')">' + 'Supprimer</button><button class="btn btn-save" onclick="saveFiche(\''+f.id+'\')" id="btn-save-'+f.id+'">Sauvegarder</button></div></div>' +
+  '<div class="section"><div class="section-title">Identification</div>' +
+  '<div class="field-row"><span class="field-label">Fournisseur</span><input class="field-input" id="f-fournisseur" value="'+esc(f.fournisseur||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Marque</span><input class="field-input" id="f-marque" value="'+esc(f.marque||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Plateforme</span><input class="field-input" id="f-source" value="'+esc(f.source||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">P\u00e9riode</span><input class="field-input" id="f-periode" value="'+esc(f.periode||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Garantie</span><input class="field-input" id="f-garantie" value="'+esc(f.garantie||'')+'"></div></div>' +
+  '<div class="section"><div class="section-title">Contacts SAV</div><div class="contacts-head"><span>R\u00f4le</span><span>T\u00e9l\u00e9phone</span><span>Email</span><span></span></div><div id="contacts-list">'+contacts.map((c,i) => contactRowHTML(i,c)).join('')+'</div><button class="add-contact" onclick="addContact()">+ Ajouter un contact</button></div>' +
+  '<div class="section"><div class="section-title">Emails proc\u00e9duraux</div>' +
+  '<div class="field-row"><span class="field-label">PMS</span><input class="field-input email" id="f-pms_email" value="'+esc(f.pms_email||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Sous garantie</span><input class="field-input email" id="f-psg_email" value="'+esc(f.psg_email||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Pannes multiples</span><input class="field-input email" id="f-pm_email" value="'+esc(f.pm_email||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">R\u00e8gle 21j</span><input class="field-input email" id="f-r21j_email" value="'+esc(f.r21j_email||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Pi\u00e8ces d\u00e9tach\u00e9es</span><input class="field-input email" id="f-pieces_email" value="'+esc(f.pieces_email||'')+'"></div></div>' +
+  '<div class="section"><div class="section-title">Infos compl\u00e9mentaires</div>' +
+  '<div class="field-row"><span class="field-label">PMS d\u00e9lai max</span><input class="field-input" id="f-pms_delai" value="'+esc(f.pms_delai||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">R\u00e8gle 21j d\u00e9lai</span><input class="field-input" id="f-r21j_delai" value="'+esc(f.r21j_delai||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Seuil pannes mult.</span><input class="field-input" id="f-pm_seuil" value="'+esc(f.pm_seuil||'')+'"></div>' +
+  '<div class="field-row"><span class="field-label">Pi\u00e8ces dispo l\u00e9gale</span><input class="field-input" id="f-pieces_dispo" value="'+esc(f.pieces_dispo||'')+'"></div>' +
+  '<div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Points vigilance</span><textarea class="field-input" id="f-alertes" rows="3" style="resize:vertical">'+esc(f.alertes||'')+'</textarea></div>' +
+  '<div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Notes libres</span><textarea class="field-input" id="f-notes" rows="3" style="resize:vertical">'+esc(f.notes||'')+'</textarea></div></div>';
 }
 
 function contactRowHTML(i, c) {
-  return `<div class="contact-row" id="cr-${i}">
-    <input class="field-input" placeholder="Rôle" value="${esc(c.role||'')}">
-    <input class="field-input" placeholder="Téléphone" value="${esc(c.tel||'')}">
-    <input class="field-input" placeholder="Email" value="${esc(c.email||'')}">
-    <button class="del-btn" onclick="this.closest('.contact-row').remove()" title="Supprimer">×</button>
-  </div>`;
+  return '<div class="contact-row" id="cr-'+i+'">' +
+    '<input class="field-input" placeholder="R\u00f4le" value="'+esc(c.role||'')+'">'+
+    '<input class="field-input" placeholder="T\u00e9l\u00e9phone" value="'+esc(c.tel||'')+'">'+
+    '<input class="field-input" placeholder="Email" value="'+esc(c.email||'')+'">'+
+    '<button class="del-btn" onclick="this.closest(\'.contact-row\').remove()" title="Supprimer">\u00d7</button></div>';
 }
 
 function addContact() {
@@ -255,13 +283,10 @@ function addContact() {
   list.appendChild(div.firstElementChild);
 }
 
-// ── SAVE ────────────────────────────────────────────────────────────────────────────────────────
 async function saveFiche(id) {
   const btn = document.getElementById('btn-save-'+id);
   const sfb = document.getElementById('sfb');
-  btn.disabled = true;
-  btn.textContent = 'Sauvegarde…';
-  sfb.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Sauvegarde\u2026'; sfb.style.display = 'none';
 
   const contacts = [];
   document.querySelectorAll('#contacts-list .contact-row').forEach(row => {
@@ -279,8 +304,7 @@ async function saveFiche(id) {
     pm_email: v('f-pm_email'), r21j_email: v('f-r21j_email'), pieces_email: v('f-pieces_email'),
     pms_delai: v('f-pms_delai'), r21j_delai: v('f-r21j_delai'),
     pm_seuil: v('f-pm_seuil'), pieces_dispo: v('f-pieces_dispo'),
-    alertes: v('f-alertes'), notes: v('f-notes'),
-    _modified: true
+    alertes: v('f-alertes'), notes: v('f-notes')
   };
 
   try {
@@ -288,88 +312,62 @@ async function saveFiche(id) {
     const res = JSON.parse(await r.text());
     if (res.error) throw new Error(res.error);
 
-    // Update local cache
-    const idx = ALL.findIndex(x => x.id === id);
-    if (idx >= 0) ALL[idx] = fiche;
-    else ALL.push(fiche);
+    CACHE[id] = fiche;
+    const li = ALL.find(x => x.id === id);
+    if (li) { li.fournisseur = fiche.fournisseur; li.marque = fiche.marque; li.source = fiche.source; }
+    const liEl = document.getElementById('li-'+id);
+    if (liEl) liEl.querySelector('.brand-name').textContent = fiche.fournisseur||fiche.marque||id;
 
-    sfb.className = 'save-feedback save-ok';
-    sfb.textContent = '✓ Sauvegardé';
-    sfb.style.display = 'inline-block';
+    sfb.className = 'save-feedback save-ok'; sfb.textContent = '\u2713 Sauvegard\u00e9'; sfb.style.display = 'inline-block';
     setTimeout(() => sfb.style.display = 'none', 2500);
-
-    // Update list item
-    const li = document.getElementById('li-'+id);
-    if (li) {
-      li.querySelector('.brand-name').textContent = fiche.fournisseur||fiche.marque||id;
-      li.classList.add('modified');
-    }
   } catch(e) {
-    sfb.className = 'save-feedback save-err';
-    sfb.textContent = '✗ Erreur : ' + e.message;
-    sfb.style.display = 'inline-block';
+    sfb.className = 'save-feedback save-err'; sfb.textContent = '\u2717 ' + e.message; sfb.style.display = 'inline-block';
   }
-  btn.disabled = false;
-  btn.textContent = 'Sauvegarder';
+  btn.disabled = false; btn.textContent = 'Sauvegarder';
 }
 
 async function deleteFiche(id) {
-  if (!confirm('Supprimer cette fiche ? Cette action est irréversible.')) return;
+  if (!confirm('Supprimer cette fiche ? Cette action est irr\u00e9versible.')) return;
   try {
     await fetch(PROXY + '?action=deleteFiche&id=' + encodeURIComponent(id), {redirect:'follow'});
     ALL = ALL.filter(x => x.id !== id);
+    delete CACHE[id];
     cur = null;
     filterList();
-    setRight('<div class="empty-right"><strong>Fiche supprimée</strong><span>Sélectionnez une autre marque</span></div>');
-  } catch(e) { alert('Erreur suppression : ' + e.message); }
+    setRight('<div class="empty-right"><strong>Fiche supprim\u00e9e</strong></div>');
+  } catch(e) { alert('Erreur : ' + e.message); }
 }
 
 function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function setRight(html) { document.getElementById('right').innerHTML = html; }
 
-// ── NOUVELLE FICHE (paste) ────────────────────────────────────────────────────────────────────────────────
 function showPaste() {
   cur = null;
   document.querySelectorAll('.brand-item').forEach(el => el.classList.remove('active'));
-  setRight(`
-  <div class="paste-panel">
-    <h2>Nouvelle fiche SAV</h2>
-    <p>Collez le texte brut du PDF de procédure SAV ci-dessous.<br>
-    Cliquez <strong>Structurer</strong> pour extraire automatiquement les informations, puis modifiez et sauvegardez.</p>
-    <textarea id="paste-text" placeholder="Collez ici le texte copié depuis le PDF…"></textarea>
-    <div class="paste-actions">
-      <button class="btn-primary" id="btn-structure" onclick="structurePaste()">Structurer →</button>
-      <span id="paste-status" style="font-size:12px;color:#888"></span>
-    </div>
-  </div>`);
+  setRight('<div class="paste-panel"><h2>Nouvelle fiche SAV</h2><p>Collez le texte brut du PDF de proc\u00e9dure SAV ci-dessous.<br>Cliquez <strong>Structurer</strong> pour extraire automatiquement les informations, puis modifiez et sauvegardez.</p><textarea id="paste-text" placeholder="Collez ici le texte copi\u00e9 depuis le PDF\u2026"></textarea><div class="paste-actions"><button class="btn-primary" id="btn-structure" onclick="structurePaste()">Structurer \u2192</button><span id="paste-status" style="font-size:12px;color:#888"></span></div></div>');
 }
 
 async function structurePaste() {
   const text = document.getElementById('paste-text').value.trim();
-  if (!text) { alert('Collez d'abord du texte.'); return; }
+  if (!text) { alert('Collez d\'abord du texte.'); return; }
   const btn = document.getElementById('btn-structure');
   const st  = document.getElementById('paste-status');
-  btn.disabled = true; btn.textContent = 'Extraction…';
-  st.textContent = 'Appel au serveur…';
+  btn.disabled = true; btn.textContent = 'Extraction\u2026'; st.textContent = 'Appel au serveur\u2026';
   try {
-    const r = await fetch(
-      PROXY + '?action=extractFromText&text=' + encodeURIComponent(text.substring(0,8000)),
-      {redirect:'follow'}
-    );
+    const r = await fetch(PROXY + '?action=extractFromText&text=' + encodeURIComponent(text.substring(0,8000)), {redirect:'follow'});
     const f = JSON.parse(await r.text());
     if (f.error) throw new Error(f.error);
-    // Generate a temp id
     if (!f.id) f.id = 'new_' + Date.now();
-    ALL.unshift(f);
+    ALL.unshift({id:f.id, fournisseur:f.fournisseur||'', marque:f.marque||'', source:f.source||'', periode:f.periode||''});
+    CACHE[f.id] = f;
     renderList(ALL);
     showFiche(f.id);
   } catch(e) {
-    st.textContent = '✗ Erreur : ' + e.message;
-    btn.disabled = false; btn.textContent = 'Structurer →';
+    st.textContent = '\u2717 Erreur : ' + e.message;
+    btn.disabled = false; btn.textContent = 'Structurer \u2192';
   }
 }
-
-function setRight(html) { document.getElementById('right').innerHTML = html; }
 
 boot();
 </script>
