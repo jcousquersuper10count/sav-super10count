@@ -129,12 +129,12 @@ header{background:#1d1d1f;color:#fff;padding:0 20px;height:48px;display:flex;ali
 <script>
 const PROXY = 'https://script.google.com/macros/s/AKfycbyD8O5QVGMOpCX7DYwpSchagMK8XzmyGd0D1CYXwBiqd--gTTM-Rcy8RIJv5xvmzow/exec';
 
-let ALL = [];   // liste légère [{id, fournisseur, marque, source, periode}]
-let CACHE = {}; // détails complets par id
+let ALL = [];   // liste l\u00e9g\u00e8re [{id, fournisseur, marque, source, periode}]
+let CACHE = {}; // d\u00e9tails complets par id
 let cur = null;
 let bootTimer = null;
 
-// ── BARRE DE PROGRESSION ANIMÉE ──────────────────────────────────────────
+// \u2500\u2500 BARRE DE PROGRESSION ANIM\u00c9E \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 let pTarget = 0;
 let pCur = 0;
 function setProgress(pct, label, sub) {
@@ -156,18 +156,18 @@ function startAutoProgress() {
   let elapsed = 0;
   bootTimer = setInterval(() => {
     elapsed += 500;
-    // Courbe: rapide au début, ralentit vers 85%
+    // Courbe: rapide au d\u00e9but, ralentit vers 85%
     const target = Math.min(85, Math.round(85 * (1 - Math.exp(-elapsed / 15000))));
     if (pTarget < target) setProgress(target);
     if (elapsed > 60000) {
       clearInterval(bootTimer);
-      setProgress(85, 'Toujours en attente…', 'Le serveur prend plus de temps que prévu.');
+      setProgress(85, 'Toujours en attente\u2026', 'Le serveur prend plus de temps que pr\u00e9vu.');
       document.getElementById('retry-btn').style.display = 'inline-block';
     }
   }, 500);
 }
 
-// ── BOOT ─────────────────────────────────────────────────────────────────
+// \u2500\u2500 BOOT \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 async function boot() {
   document.getElementById('retry-btn').style.display = 'none';
   pCur = 0; pTarget = 0;
@@ -179,16 +179,16 @@ async function boot() {
   right.innerHTML = '';
   right.appendChild(bootScreen);
 
-  setProgress(5, 'Connexion au serveur…', 'Première connexion : le serveur peut mettre jusqu\'à 30 s à démarrer.');
+  setProgress(5, 'Connexion au serveur\u2026', 'Premi\u00e8re connexion : le serveur peut mettre jusqu\'\u00e0 30 s \u00e0 d\u00e9marrer.');
   startAutoProgress();
 
   try {
     const r = await fetch(PROXY + '?action=getList', {redirect:'follow'});
     const data = JSON.parse(await r.text());
-    if (!Array.isArray(data)) throw new Error('Réponse invalide');
+    if (!Array.isArray(data)) throw new Error('R\u00e9ponse invalide');
 
     clearInterval(bootTimer);
-    setProgress(100, ALL.length + ' fiches chargées', '');
+    setProgress(100, ALL.length + ' fiches charg\u00e9es', '');
     await new Promise(r2 => setTimeout(r2, 300));
 
     ALL = data;
@@ -197,7 +197,7 @@ async function boot() {
     setStatus(ALL.length + ' fiches');
     document.getElementById('list-count').textContent = ALL.length + ' marques';
     renderList(ALL);
-    setRight('<div class="empty-right"><strong>Base SAV</strong><span>Sélectionnez une marque pour consulter ou modifier sa fiche</span></div>');
+    setRight('<div class="empty-right"><strong>Base SAV</strong><span>S\u00e9lectionnez une marque pour consulter ou modifier sa fiche</span></div>');
   } catch(e) {
     clearInterval(bootTimer);
     setProgress(pCur, 'Erreur de connexion', e.message);
@@ -208,11 +208,11 @@ async function boot() {
 
 function setStatus(t) { document.getElementById('h-status').textContent = t; }
 
-// ── LIST ─────────────────────────────────────────────────────────────────
+// \u2500\u2500 LIST \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function renderList(items) {
   const el = document.getElementById('brand-list');
   document.getElementById('list-count').textContent = items.length + ' marques';
-  if (!items.length) { el.innerHTML = '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">Aucun résultat</div>'; return; }
+  if (!items.length) { el.innerHTML = '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">Aucun r\u00e9sultat</div>'; return; }
   el.innerHTML = items.map(f =>
     '<div class="brand-item'+(f.id===cur?' active':'')+'" onclick="showFiche(\''+f.id+'\')" id="li-'+f.id+'">' +
     '<span class="brand-name">'+(f.fournisseur||f.marque||f.id)+'</span>' +
@@ -230,12 +230,12 @@ function filterList() {
   ) : ALL);
 }
 
-// ── FICHE : chargement lazy ───────────────────────────────────────────────
+// \u2500\u2500 FICHE : chargement lazy \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 async function showFiche(id) {
   cur = id;
   document.querySelectorAll('.brand-item').forEach(el => el.classList.toggle('active', el.id === 'li-'+id));
 
-  // Si déjà en cache, affiche immédiatement
+  // Si d\u00e9j\u00e0 en cache, affiche imm\u00e9diatement
   if (CACHE[id]) { setRight('<div class="fiche">' + ficheHTML(CACHE[id]) + '</div>'); return; }
 
   // Skeleton pendant le chargement
@@ -264,7 +264,7 @@ function ficheHTML(f) {
   <div class="fiche-head">
     <div>
       <div class="fiche-title">${esc(f.fournisseur||'')} <span style="font-size:14px;color:#888;font-weight:400">${esc(f.marque||'')}</span></div>
-      <div class="fiche-sub">${esc(f.source||'')}${f.source&&f.periode?' · ':''}${esc(f.periode||'')}</div>
+      <div class="fiche-sub">${esc(f.source||'')}${f.source&&f.periode?' \u00b7 ':''}${esc(f.periode||'')}</div>
     </div>
     <div class="fiche-actions">
       <span class="save-feedback" id="sfb"></span>
@@ -278,32 +278,32 @@ function ficheHTML(f) {
     <div class="field-row"><span class="field-label">Fournisseur</span><input class="field-input" id="f-fournisseur" value="${esc(f.fournisseur||'')}"></div>
     <div class="field-row"><span class="field-label">Marque</span><input class="field-input" id="f-marque" value="${esc(f.marque||'')}"></div>
     <div class="field-row"><span class="field-label">Plateforme</span><input class="field-input" id="f-source" value="${esc(f.source||'')}"></div>
-    <div class="field-row"><span class="field-label">Période</span><input class="field-input" id="f-periode" value="${esc(f.periode||'')}"></div>
+    <div class="field-row"><span class="field-label">P\u00e9riode</span><input class="field-input" id="f-periode" value="${esc(f.periode||'')}"></div>
     <div class="field-row"><span class="field-label">Garantie</span><input class="field-input" id="f-garantie" value="${esc(f.garantie||'')}"></div>
   </div>
 
   <div class="section">
     <div class="section-title">Contacts SAV</div>
-    <div class="contacts-head"><span>Rôle</span><span>Téléphone</span><span>Email</span><span></span></div>
+    <div class="contacts-head"><span>R\u00f4le</span><span>T\u00e9l\u00e9phone</span><span>Email</span><span></span></div>
     <div id="contacts-list">${contacts.map((c,i) => contactRowHTML(i,c)).join('')}</div>
     <button class="add-contact" onclick="addContact()">+ Ajouter un contact</button>
   </div>
 
   <div class="section">
-    <div class="section-title">Emails procéduraux</div>
+    <div class="section-title">Emails proc\u00e9duraux</div>
     <div class="field-row"><span class="field-label">PMS</span><input class="field-input email" id="f-pms_email" value="${esc(f.pms_email||'')}"></div>
     <div class="field-row"><span class="field-label">Sous garantie</span><input class="field-input email" id="f-psg_email" value="${esc(f.psg_email||'')}"></div>
     <div class="field-row"><span class="field-label">Pannes multiples</span><input class="field-input email" id="f-pm_email" value="${esc(f.pm_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Règle 21j</span><input class="field-input email" id="f-r21j_email" value="${esc(f.r21j_email||'')}"></div>
-    <div class="field-row"><span class="field-label">Pièces détachées</span><input class="field-input email" id="f-pieces_email" value="${esc(f.pieces_email||'')}"></div>
+    <div class="field-row"><span class="field-label">R\u00e8gle 21j</span><input class="field-input email" id="f-r21j_email" value="${esc(f.r21j_email||'')}"></div>
+    <div class="field-row"><span class="field-label">Pi\u00e8ces d\u00e9tach\u00e9es</span><input class="field-input email" id="f-pieces_email" value="${esc(f.pieces_email||'')}"></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Infos complémentaires</div>
-    <div class="field-row"><span class="field-label">PMS délai max</span><input class="field-input" id="f-pms_delai" value="${esc(f.pms_delai||'')}"></div>
-    <div class="field-row"><span class="field-label">Règle 21j délai</span><input class="field-input" id="f-r21j_delai" value="${esc(f.r21j_delai||'')}"></div>
+    <div class="section-title">Infos compl\u00e9mentaires</div>
+    <div class="field-row"><span class="field-label">PMS d\u00e9lai max</span><input class="field-input" id="f-pms_delai" value="${esc(f.pms_delai||'')}"></div>
+    <div class="field-row"><span class="field-label">R\u00e8gle 21j d\u00e9lai</span><input class="field-input" id="f-r21j_delai" value="${esc(f.r21j_delai||'')}"></div>
     <div class="field-row"><span class="field-label">Seuil pannes mult.</span><input class="field-input" id="f-pm_seuil" value="${esc(f.pm_seuil||'')}"></div>
-    <div class="field-row"><span class="field-label">Pièces dispo légale</span><input class="field-input" id="f-pieces_dispo" value="${esc(f.pieces_dispo||'')}"></div>
+    <div class="field-row"><span class="field-label">Pi\u00e8ces dispo l\u00e9gale</span><input class="field-input" id="f-pieces_dispo" value="${esc(f.pieces_dispo||'')}"></div>
     <div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Points vigilance</span><textarea class="field-input" id="f-alertes" rows="3" style="resize:vertical">${esc(f.alertes||'')}</textarea></div>
     <div class="field-row" style="align-items:flex-start"><span class="field-label" style="padding-top:7px">Notes libres</span><textarea class="field-input" id="f-notes" rows="3" style="resize:vertical">${esc(f.notes||'')}</textarea></div>
   </div>`;
@@ -311,10 +311,10 @@ function ficheHTML(f) {
 
 function contactRowHTML(i, c) {
   return `<div class="contact-row" id="cr-${i}">
-    <input class="field-input" placeholder="Rôle" value="${esc(c.role||'')}">
-    <input class="field-input" placeholder="Téléphone" value="${esc(c.tel||'')}">
+    <input class="field-input" placeholder="R\u00f4le" value="${esc(c.role||'')}">
+    <input class="field-input" placeholder="T\u00e9l\u00e9phone" value="${esc(c.tel||'')}">
     <input class="field-input" placeholder="Email" value="${esc(c.email||'')}">
-    <button class="del-btn" onclick="this.closest('.contact-row').remove()" title="Supprimer">×</button>
+    <button class="del-btn" onclick="this.closest('.contact-row').remove()" title="Supprimer">\u00d7</button>
   </div>`;
 }
 
@@ -326,11 +326,11 @@ function addContact() {
   list.appendChild(div.firstElementChild);
 }
 
-// ── SAVE ─────────────────────────────────────────────────────────────────
+// \u2500\u2500 SAVE \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 async function saveFiche(id) {
   const btn = document.getElementById('btn-save-'+id);
   const sfb = document.getElementById('sfb');
-  btn.disabled = true; btn.textContent = 'Sauvegarde…'; sfb.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Sauvegarde\u2026'; sfb.style.display = 'none';
 
   const contacts = [];
   document.querySelectorAll('#contacts-list .contact-row').forEach(row => {
@@ -363,23 +363,23 @@ async function saveFiche(id) {
     const liEl = document.getElementById('li-'+id);
     if (liEl) liEl.querySelector('.brand-name').textContent = fiche.fournisseur||fiche.marque||id;
 
-    sfb.className = 'save-feedback save-ok'; sfb.textContent = '✓ Sauvegardé'; sfb.style.display = 'inline-block';
+    sfb.className = 'save-feedback save-ok'; sfb.textContent = '\u2713 Sauvegard\u00e9'; sfb.style.display = 'inline-block';
     setTimeout(() => sfb.style.display = 'none', 2500);
   } catch(e) {
-    sfb.className = 'save-feedback save-err'; sfb.textContent = '✗ ' + e.message; sfb.style.display = 'inline-block';
+    sfb.className = 'save-feedback save-err'; sfb.textContent = '\u2717 ' + e.message; sfb.style.display = 'inline-block';
   }
   btn.disabled = false; btn.textContent = 'Sauvegarder';
 }
 
 async function deleteFiche(id) {
-  if (!confirm('Supprimer cette fiche ? Cette action est irréversible.')) return;
+  if (!confirm('Supprimer cette fiche ? Cette action est irr\u00e9versible.')) return;
   try {
     await fetch(PROXY + '?action=deleteFiche&id=' + encodeURIComponent(id), {redirect:'follow'});
     ALL = ALL.filter(x => x.id !== id);
     delete CACHE[id];
     cur = null;
     filterList();
-    setRight('<div class="empty-right"><strong>Fiche supprimée</strong></div>');
+    setRight('<div class="empty-right"><strong>Fiche supprim\u00e9e</strong></div>');
   } catch(e) { alert('Erreur : ' + e.message); }
 }
 
@@ -387,17 +387,17 @@ function v(id) { const el = document.getElementById(id); return el ? el.value.tr
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function setRight(html) { document.getElementById('right').innerHTML = html; }
 
-// ── NOUVELLE FICHE ────────────────────────────────────────────────────────
+// \u2500\u2500 NOUVELLE FICHE \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function showPaste() {
   cur = null;
   document.querySelectorAll('.brand-item').forEach(el => el.classList.remove('active'));
   setRight(`<div class="paste-panel">
     <h2>Nouvelle fiche SAV</h2>
-    <p>Collez le texte brut du PDF de procédure SAV ci-dessous.<br>
+    <p>Collez le texte brut du PDF de proc\u00e9dure SAV ci-dessous.<br>
     Cliquez <strong>Structurer</strong> pour extraire automatiquement les informations, puis modifiez et sauvegardez.</p>
-    <textarea id="paste-text" placeholder="Collez ici le texte copié depuis le PDF…"></textarea>
+    <textarea id="paste-text" placeholder="Collez ici le texte copi\u00e9 depuis le PDF\u2026"></textarea>
     <div class="paste-actions">
-      <button class="btn-primary" id="btn-structure" onclick="structurePaste()">Structurer →</button>
+      <button class="btn-primary" id="btn-structure" onclick="structurePaste()">Structurer \u2192</button>
       <span id="paste-status" style="font-size:12px;color:#888"></span>
     </div>
   </div>`);
@@ -405,10 +405,10 @@ function showPaste() {
 
 async function structurePaste() {
   const text = document.getElementById('paste-text').value.trim();
-  if (!text) { alert('Collez d\'abord du texte.'); return; }
+  if (!text) { alert('Collez d'abord du texte.'); return; }
   const btn = document.getElementById('btn-structure');
   const st  = document.getElementById('paste-status');
-  btn.disabled = true; btn.textContent = 'Extraction…'; st.textContent = 'Appel au serveur…';
+  btn.disabled = true; btn.textContent = 'Extraction\u2026'; \n  st.textContent = 'Appel au serveur\u2026';
   try {
     const r = await fetch(PROXY + '?action=extractFromText&text=' + encodeURIComponent(text.substring(0,8000)), {redirect:'follow'});
     const f = JSON.parse(await r.text());
@@ -419,8 +419,8 @@ async function structurePaste() {
     renderList(ALL);
     showFiche(f.id);
   } catch(e) {
-    st.textContent = '✗ Erreur : ' + e.message;
-    btn.disabled = false; btn.textContent = 'Structurer →+;
+    st.textContent = '\u2717 Erreur : ' + e.message;
+    btn.disabled = false; btn.textContent = 'Structurer \u2192';
   }
 }
 
